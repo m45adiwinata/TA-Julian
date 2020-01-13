@@ -15,4 +15,7 @@ Route::group([
     $router->resource('sub-lokasi', SubLokasiController::class);
     $router->resource('status', StatusController::class);
     $router->resource('satuan', SatuanController::class);
+    $router->resource('suplier', SuplierController::class);
+    $router->resource('pelanggan', PelangganController::class);
+    $router->resource('barang', BarangController::class);
 });

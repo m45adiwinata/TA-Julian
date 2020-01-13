@@ -4,10 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SubLokasi extends Model
+class Barang extends Model
 {
-    protected $table = 'sub_lokasi';
-    public $timestamps = false;
+    protected $table = 'barang';
+
+    public function satuan()
+    {
+        return $this->hasOne('App\Satuan');
+    }
 
     public function stok()
     {
