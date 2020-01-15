@@ -10,11 +10,21 @@ class Pembelian extends Model
 
     public function suplier()
     {
-        return $this->hasOne('App\Suplier');
+        return $this->belongsTo('App\Suplier');
     }
 
     public function status()
     {
         return $this->hasOne('App\Status');
+    }
+
+    public function barang()
+    {
+        return $this->belongsToMany('App\Barang');
+    }
+
+    public function barangPembelian()
+    {
+        return $this->hasMany('App\BarangPembelian');
     }
 }

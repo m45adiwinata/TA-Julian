@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>srtdash - ICO Dashboard</title>
+        <title>POS | AIU</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="shortcut icon" type="image/png" href="{{asset('assets/images/icon/favicon.ico')}}">
         <link rel="stylesheet" href="{{asset('assets/css/bootstrap.min.css')}}">
@@ -23,7 +23,7 @@
         <!-- modernizr css -->
         <script src="{{asset('assets/js/vendor/modernizr-2.8.3.min.js')}}"></script>
         <link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
-        
+        @yield('style')
     </head>
 
     <body>

@@ -217,7 +217,7 @@
                                                 <span>PEMBELIAN</span>
                                             </div>
                                             <div class="iv-right col-6 text-md-right">
-                                                <span>#{{$new_id}}</span>
+                                                <span>#{{$pembelian->id}}</span>
                                             </div>
                                         </div>
                                     </div>

@@ -18,3 +18,4 @@ Route::get('/home', 'HomeController@index');
 Route::resource('/pembelian', PembelianController::class);
 Route::get('/pembelian/get-suplier/{id}', 'PembelianController@getSuplierDetail');
 Route::get('/pembelian/get-barang/{id}', 'PembelianController@getBarangDetail');
+Route::get('/pembelian/set-status/{id}/{status}', 'PembelianController@setStatus');
