@@ -11,10 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-Route::get('/home', 'HomeController@index');
+Route::get('/login', 'UserLogController@index');
+Route::post('/login', 'UserLogController@login');
+Route::get('/', 'HomeController@index');
 Route::resource('/pembelian', PembelianController::class);
 Route::get('/pembelian/get-suplier/{id}', 'PembelianController@getSuplierDetail');
 Route::get('/pembelian/get-barang/{id}', 'PembelianController@getBarangDetail');

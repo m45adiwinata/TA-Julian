@@ -260,7 +260,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h4 class="header-title mb-0">Overview</h4>
+                                <h4 class="header-title mb-0">Penjualan dan Pembelian</h4>
                                 <select class="custome-select border-0 pr-3">
                                     <option selected>Last 24 Hours</option>
                                     <option value="0">01 July 2018</option>
@@ -273,7 +273,7 @@
                 <div class="col-xl-3 col-lg-4 coin-distribution">
                     <div class="card h-full">
                         <div class="card-body">
-                            <h4 class="header-title mb-0">Coin Distribution</h4>
+                            <h4 class="header-title mb-0">Penjualan Sales Bulan Ini</h4>
                             <div id="coin_distribution"></div>
                         </div>
                     </div>
@@ -286,7 +286,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="d-sm-flex justify-content-between align-items-center">
-                                <h4 class="header-title mb-0">Market Value And Trends</h4>
+                                <h4 class="header-title mb-0">Pelanggan Terbaik</h4>
                                 <select class="custome-select border-0 pr-3">
                                     <option selected>Last 24 Hours</option>
                                     <option value="0">01 July 2018</option>

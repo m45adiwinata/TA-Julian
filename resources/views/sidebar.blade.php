@@ -9,12 +9,12 @@
         <div class="menu-inner">
             <nav>
                 <ul class="metismenu" id="menu">
-                    <li>
+                    <li{{$page == 'home' ? ' class=active' : ''}}>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-dashboard"></i><span>dashboard</span></a>
                         <ul class="collapse">
-                            <li><a href="index.html">ICO dashboard</a></li>
-                            <li><a href="index2.html">Ecommerce dashboard</a></li>
-                            <li><a href="index3.html">SEO dashboard</a></li>
+                            <li{{$page == 'home' ? ' class=active' : ''}}><a href="/">Home</a></li>
+                            <li><a href="index2.html">History Pembelian</a></li>
+                            <li><a href="index3.html">History Penjualan</a></li>
                         </ul>
                     </li>
                     <li>
@@ -63,12 +63,16 @@
                             <li><a href="themify.html">themify icons</a></li>
                         </ul>
                     </li>
+                    @if($page == 'data_pembelian' || $page == 'buat_pembelian')
                     <li class="active">
+                    @else
+                    <li>
+                    @endif
                         <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-table"></i>
                             <span>Pembelian</span></a>
                         <ul class="collapse">
-                            <li><a href="/pembelian">Data Pembelian</a></li>
-                            <li class="active"><a href="/pembelian/create">Buat Pembelian</a></li>
+                            <li{{$page == 'data_pembelian' ? ' class=active' : ''}}><a href="/pembelian">Data Pembelian</a></li>
+                            <li{{$page == 'buat_pembelian' ? ' class=active' : ''}}><a href="/pembelian/create">Buat Pembelian</a></li>
                             <li><a href="datatable.html">datatable</a></li>
                         </ul>
                     </li>

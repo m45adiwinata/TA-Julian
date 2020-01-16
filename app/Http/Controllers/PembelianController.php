@@ -33,6 +33,8 @@ class PembelianController extends Controller
             }
         }
         $data['statuses'] = Status::get();
+        $data['page'] = 'data_pembelian';
+
         return view('pembelian.index', $data);
     }
 
@@ -51,9 +53,10 @@ class PembelianController extends Controller
             $data['new_id'] = end($pembelians)[0]->id+1;
         }
         $data['supliers'] = Suplier::get();
-        $data['barangs'] = Barang::get();
+        $data['barangs'] = Barang::where('satuan_id', 1)->orWhere('satuan_id', 2)->get();
         $data['lokasis'] = Lokasi::get();
         $data['sub_lokasis'] = SubLokasi::get();
+        $data['page'] = 'buat_pembelian';
 
         return view('pembelian.create', $data);
     }
