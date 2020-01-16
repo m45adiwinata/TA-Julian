@@ -7,6 +7,9 @@ use App\Suplier;
 use App\Barang;
 use App\BarangPembelian;
 use App\Status;
+use App\StokBarang;
+use App\Lokasi;
+use App\SubLokasi;
 use Illuminate\Http\Request;
 
 class PembelianController extends Controller
@@ -49,6 +52,9 @@ class PembelianController extends Controller
         }
         $data['supliers'] = Suplier::get();
         $data['barangs'] = Barang::get();
+        $data['lokasis'] = Lokasi::get();
+        $data['sub_lokasis'] = SubLokasi::get();
+
         return view('pembelian.create', $data);
     }
 
@@ -78,6 +84,8 @@ class PembelianController extends Controller
             $barang = new BarangPembelian;
             $barang->barang_id = $barang_id;
             $barang->harga_beli = $request->qty[$key] * Barang::find($barang_id)->harga;
+            $barang->lokasi_id = $request->lokasi[$key];
+            $barang->sub_lokasi_id = $request->sub_lokasi[$key];
             $data->barangPembelian()->save($barang);
         }
         
@@ -106,6 +114,14 @@ class PembelianController extends Controller
         $data['pembelian'] = $pembelian;
         $data['supliers'] = Suplier::get();
         $data['barangs'] = Barang::get();
+        $data['lokasis'] = Lokasi::get();
+        $data['sub_lokasis'] = SubLokasi::get();
+        $data['total_cost'] = 0;
+        foreach ($pembelian->barangPembelian()->get() as $key => $bp) {
+            $data['total_cost'] += $bp->harga_beli;
+        }
+        
+        // dd($data);
         return view('pembelian.edit', $data);
     }
 
@@ -149,6 +165,29 @@ class PembelianController extends Controller
         $pembelian = Pembelian::find($id);
         $pembelian->status_id = $status;
         $pembelian->save();
+        if ($status == 2) {
+            foreach ($pembelian->barangPembelian()->get() as $key => $beli) {
+                $harga_unit = $beli->barang()->first()->harga;
+                for ($i=0; $i < $beli->harga_beli/$harga_unit; $i++) { 
+                    $stok = new StokBarang;
+                    $stok->barang_id = $beli->barang_id;
+                    $stok->lokasi_id  = $beli->lokasi_id;
+                    $stok->sub_lokasi_id = $beli->sub_lokasi_id;
+                    $stok->save();
+                }
+            }
+        } else {
+            foreach ($pembelian->barangPembelian()->get() as $key => $beli) {
+                $barang = $beli->barang()->first();
+                $harga_unit = $barang->harga;
+                if (count($barang->stok()->get()) > 0) {
+                    for ($i=0; $i < $beli->harga_beli/$harga_unit; $i++) { 
+                        $barang->stok()->get()[0]->delete();
+                    }
+                }
+            }
+        }
+        
         return "success";
     }
 }

@@ -250,10 +250,11 @@
                                         <table class="table table-bordered table-hover text-right">
                                             <thead>
                                                 <tr class="text-capitalize">
-                                                    <th class="text-left" style="width: 50%; min-width: 130px;">description</th>
-                                                    <th>qty</th>
-                                                    <th style="min-width: 100px">Unit Cost</th>
-                                                    <th>total</th>
+                                                    <th class="text-left" style="width: 40%; min-width: 130px;">description</th>
+                                                    <th class="text-center">qty</th>
+                                                    <th class="text-center" style="min-width: 100px">Unit Cost</th>
+                                                    <th class="text-center">total</th>
+                                                    <th colspan="2" class="text-center">penyimpanan</th>
                                                     <th>action</th>
                                                 </tr>
                                             </thead>
@@ -270,10 +271,24 @@
                                                     <td><input type="number" value="1" name="qty[0]" style="width:50px;" id="qty-0" onchange="onChangeQty(0)"></td>
                                                     <td id="uc-0"></td>
                                                     <td id="total-0"></td>
+                                                    <td>
+                                                        <select name="lokasi[0]" id="lokasi-0" style="width:100%;">
+                                                            @foreach($lokasis as $lokasi)
+                                                            <option value="{{$lokasi->id}}">{{$lokasi->nama}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select name="sub_lokasi[0]" id="sub_lokasi-0" style="width:100%;">
+                                                            @foreach($sub_lokasis as $sub_lokasi)
+                                                            <option value="{{$sub_lokasi->id}}">{{$sub_lokasi->nama}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
                                                     <td onclick="hapusRow(0)">del</td>
                                                 </tr>
                                                 <tr id="barang-new">
-                                                    <td colspan="5" class="text-center" onclick="tambahRow()">ADD</td>
+                                                    <td colspan="7" class="text-center" onclick="tambahRow()">ADD</td>
                                                 </tr>
                                             </tbody>
                                             <tfoot>
@@ -415,10 +430,24 @@
                 '<td><input type="number" value="1" name="qty['+jmlBarang+']" style="width:50px;" id="qty-'+jmlBarang+'" onchange="onChangeQty('+jmlBarang+')"></td>'+
                 '<td id="uc-'+jmlBarang+'"></td>'+
                 '<td id="total-'+jmlBarang+'"></td>'+
+                '<td>'+
+                    '<select name="lokasi['+jmlBarang+']" id="lokasi-'+jmlBarang+'" style="width:100%;">'+
+                        '@foreach($lokasis as $lokasi)'+
+                        '<option value="{{$lokasi->id}}">{{$lokasi->nama}}</option>'+
+                        '@endforeach'+
+                    '</select>'+
+                '</td>'+
+                '<td>'+
+                    '<select name="sub_lokasi['+jmlBarang+']" id="sub_lokasi-'+jmlBarang+'" style="width:100%;">'+
+                        '@foreach($sub_lokasis as $sub_lokasi)'+
+                        '<option value="{{$sub_lokasi->id}}">{{$sub_lokasi->nama}}</option>'+
+                        '@endforeach'+
+                    '</select>'+
+                '</td>'+
                 '<td onclick="hapusRow('+jmlBarang+')">del</td>'+
             '</tr>'+
             '<tr id="barang-new">'+
-                '<td colspan="5" class="text-center" onclick="tambahRow()">ADD</td>'+
+                '<td colspan="7" class="text-center" onclick="tambahRow()">ADD</td>'+
             '</tr>'
         );
         $('#barang-'+jmlBarang).select2();

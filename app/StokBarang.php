@@ -6,5 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class StokBarang extends Model
 {
-    protected $table = 'stok_barang';
+    protected $fillable = ['barang_id', 'lokasi_id', 'sub_lokasi_id'];
+    
+    public function barang()
+    {
+        return $this->belongsTo('App\Barang');
+    }
 }

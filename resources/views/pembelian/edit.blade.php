@@ -207,7 +207,7 @@
             <div class="row">
                 <div class="col-lg-12 mt-5">
                     <div class="card">
-                        <form method="POST" action="{{route('pembelian.store')}}">
+                        <form method="POST" action="{{route('pembelian.update', $pembelian->id)}}">
                             @csrf
                             <div class="card-body">
                                 <div class="invoice-area">
@@ -227,9 +227,9 @@
                                                 <h3>pembelian kepada</h3>
                                                 <div class="form-group">
                                                     <select class="form-control" name="suplier" id="suplier">
-                                                        <option selected="selected" disabled="disabled">Suplier...</option>
+                                                        <option disabled="disabled">Suplier...</option>
                                                         @foreach($supliers as $suplier)
-                                                        <option value="{{$suplier->id}}">{{$suplier->nama}}</option>
+                                                        <option value="{{$suplier->id}}"{{$pembelian->suplier_id == $suplier->id ? ' selected="selected"' : '""'}}>{{$suplier->nama}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -241,7 +241,7 @@
                                         </div>
                                         <div class="col-md-6 text-md-right">
                                             <ul class="invoice-date">
-                                                <li>Tanggal Pembelian : {{date('d-m-Y')}}</li>
+                                                <li>Tanggal Pembelian : {{date('d-m-Y', strtotime($pembelian->created_at))}}</li>
                                                 <!-- <li>Due Date : sat 18 | 07 | 2018</li> -->
                                             </ul>
                                         </div>
@@ -254,45 +254,70 @@
                                                     <th>qty</th>
                                                     <th style="min-width: 100px">Unit Cost</th>
                                                     <th>total</th>
+                                                    <th colspan="2" class="text-center">penyimpanan</th>
                                                     <th>action</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="barangs">
-                                                <tr id="row-barang-0">
+                                                @foreach($pembelian->barangPembelian()->get() as $key => $bp)
+                                                <tr id="row-barang-{{$key}}">
                                                     <td class="text-left">
-                                                        <select name="barang[0]" id="barang-0" style="width:100%;" onchange="setBarang(0)">
-                                                            <option disabled="disabled" selected="selected">Barang...</option>
+                                                        <select name="barang[{{$key}}]" id="barang-{{$key}}" style="width:100%;" onchange="setBarang({{$key}})">
+                                                            <option disabled="disabled">Barang...</option>
                                                             @foreach($barangs as $barang)
-                                                            <option value="{{$barang->id}}">{{$barang->nama}}</option>
+                                                            <option value="{{$barang->id}}"{{$bp->barang_id == $barang->id ? ' selected="selected"' : ''}}>{{$barang->nama}}</option>
                                                             @endforeach
                                                         </select>
                                                     </td>
-                                                    <td><input type="number" value="1" name="qty[0]" style="width:50px;" id="qty-0" onchange="onChangeQty(0)"></td>
-                                                    <td id="uc-0"></td>
-                                                    <td id="total-0"></td>
-                                                    <td onclick="hapusRow(0)">del</td>
+                                                    <td><input type="number" value="{{$bp->harga_beli/$bp->barang()->first()->harga}}" name="qty[{{$key}}]" style="width:50px;" id="qty-{{$key}}" onchange="onChangeQty({{$key}})"></td>
+                                                    <td id="uc-{{$key}}">{{$bp->barang()->first()->harga}}</td>
+                                                    <td id="total-{{$key}}">{{$bp->harga_beli}}</td>
+                                                    <td>
+                                                        <select name="lokasi[{{$key}}]" id="lokasi-{{$key}}" style="width:100%;">
+                                                            @foreach($lokasis as $lokasi)
+                                                            <option value="{{$lokasi->id}}"{{$lokasi->id == $bp->lokasi_id ? ' selected="selected"' : ''}}>{{$lokasi->nama}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select name="sub_lokasi[{{$key}}]" id="sub_lokasi-{{$key}}" style="width:100%;">
+                                                            @foreach($sub_lokasis as $sub_lokasi)
+                                                            <option value="{{$sub_lokasi->id}}"{{$sub_lokasi->id == $bp->sub_lokasi_id ? ' selected="selected"' : ''}}>{{$sub_lokasi->nama}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
+                                                    <td onclick="hapusRow({{$key}})">del</td>
                                                 </tr>
+                                                @endforeach
                                                 <tr id="barang-new">
-                                                    <td colspan="5" class="text-center" onclick="tambahRow()">ADD</td>
+                                                    <td colspan="7" class="text-center" onclick="tambahRow()">ADD</td>
                                                 </tr>
                                             </tbody>
                                             <tfoot>
                                                 <tr>
                                                     <td>
                                                         <div class="form-group">
-                                                            <input class="form-control" placeholder="Diskon..." type="number" name="diskon" id="diskon">
+                                                            <input class="form-control" placeholder="Diskon..." type="number" name="diskon" id="diskon" value="{{$pembelian->diskon}}">
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="form-group">
                                                             <select class="form-control" name="type_diskon" id="type_diskon">
-                                                                <option value="0">Jumlah</option>
-                                                                <option value="1">Persen</option>
+                                                                <option value="0"{{$pembelian->type_diskon_id == 0 ? ' selected="selected"' : ''}}>Jumlah</option>
+                                                                <option value="1"{{$pembelian->type_diskon_id == 1 ? ' selected="selected"' : ''}}>Persen</option>
                                                             </select>
                                                         </div>
                                                     </td>
                                                     <td>total cost :</td>
-                                                    <td>Rp <span id="total-cost">0</span></td>
+                                                    <td colspan="2" class="text-left">
+                                                        Rp <span id="total-cost">
+                                                            @if($pembelian->type_diskon_id == 0)
+                                                            {{$total_cost - $pembelian->diskon }}
+                                                            @else
+                                                            {{$total_cost - ($total_cost * $pembelian->diskon / 100) }}
+                                                            @endif
+                                                        </span>
+                                                    </td>
                                                     <td></td>
                                                 </tr>
                                             </tfoot>
@@ -314,10 +339,13 @@
 @endsection
 @section('script')
 <script>
-    var jmlBarang = 1;
-    var tempBarang = [];
-    var totalCost = 0;
+    var jmlBarang = {{count($pembelian->barangPembelian()->get())}};
+    var tempBarang = <?php echo($pembelian->barangPembelian()->get()) ?>;
+    var totalCost = <?php echo($total_cost) ?>;
     var rowTotalHarga = [];
+    @foreach($pembelian->barangPembelian()->get() as $key => $bp)
+    rowTotalHarga.push({"id" : {{$key}}, "total": {{$bp->harga_beli}}});
+    @endforeach
     var diskon;
     $(document).ready(function() {
         $('#suplier').select2();
@@ -329,7 +357,9 @@
                 $('#contact_person-suplier').html(data.contact_person);
             });
         });
-        $('#barang-0').select2();
+        @foreach($pembelian->barangPembelian()->get() as $key => $bp)
+        $('#barang-{{$key}}').select2();
+        @endforeach
         $('#type_diskon').select2();
         $('#diskon').change(function() {
             if ($('#diskon').val()) {
@@ -415,6 +445,20 @@
                 '<td><input type="number" value="1" name="qty['+jmlBarang+']" style="width:50px;" id="qty-'+jmlBarang+'" onchange="onChangeQty('+jmlBarang+')"></td>'+
                 '<td id="uc-'+jmlBarang+'"></td>'+
                 '<td id="total-'+jmlBarang+'"></td>'+
+                '<td>'+
+                    '<select name="lokasi[{{$key}}]" id="lokasi-{{$key}}" style="width:100%;">'+
+                        '@foreach($lokasis as $lokasi)'+
+                        '<option value="{{$lokasi->id}}">{{$lokasi->nama}}</option>'+
+                        '@endforeach'+
+                    '</select>'+
+                '</td>'+
+                '<td>'+
+                    '<select name="sub_lokasi[{{$key}}]" id="sub_lokasi-{{$key}}" style="width:100%;">'+
+                        '@foreach($sub_lokasis as $sub_lokasi)'+
+                        '<option value="{{$sub_lokasi->id}}">{{$sub_lokasi->nama}}</option>'+
+                        '@endforeach'+
+                    '</select>'+
+                '</td>'+
                 '<td onclick="hapusRow('+jmlBarang+')">del</td>'+
             '</tr>'+
             '<tr id="barang-new">'+

@@ -34,6 +34,7 @@ class BarangController extends AdminController
         $grid->column('satuan_id', __('Satuan id'))->display(function($satuan) {
             return Satuan::find($satuan)->nama;
         });
+        $grid->column('jumlah_unit', __('Jumlah Unit'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
@@ -55,6 +56,7 @@ class BarangController extends AdminController
         $show->field('harga', __('Harga Beli'));
         $show->field('harga_jual', __('Harga Jual'));
         $show->field('satuan_id', __('Satuan id'));
+        $show->field('jumlah_unit', __('Jumlah Unit'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -71,11 +73,12 @@ class BarangController extends AdminController
         $form = new Form(new Barang());
 
         $form->text('nama', __('Nama'));
-        $form->decimal('harga', __('Harga Beli'));
-        $form->decimal('harga_jual', __('Harga Jual'));
+        $form->currency('harga', __('Harga Beli'))->symbol('Rp');
+        $form->currency('harga_jual', __('Harga Jual'))->symbol('Rp');
         $form->select('satuan_id', __('Satuan id'))->options(
             Satuan::get()->pluck('nama', 'id')
         );
+        $form->number('jumlah_unit', __('Jumlah Unit'));
 
         return $form;
     }
