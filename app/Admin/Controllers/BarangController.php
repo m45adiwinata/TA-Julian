@@ -88,7 +88,7 @@ class BarangController extends AdminController
         );
         $form->number('jumlah_unit', __('Jumlah Unit'));
         $form->select('parent_id', 'Parent Barang')->options(
-            Barang::where('id', 1)->get()->pluck('nama', 'id')
+            Barang::where('satuan_id', 1)->get()->pluck('nama', 'id')
         );
 
         return $form;
