@@ -17,4 +17,9 @@ class Barang extends Model
     {
         return $this->hasMany('App\StokBarang');
     }
+
+    public function child()
+    {
+        return $this->hasOne('App\Barang', 'parent_id');
+    }
 }

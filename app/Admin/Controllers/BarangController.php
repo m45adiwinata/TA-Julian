@@ -35,8 +35,16 @@ class BarangController extends AdminController
             return Satuan::find($satuan)->nama;
         });
         $grid->column('jumlah_unit', __('Jumlah Unit'));
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+        $grid->column('parent_id', 'Parent')->display(function($id) {
+            if($id) {
+                return Barang::find($id)->nama;
+            }
+            else {
+                return null;
+            }
+        });
+        // $grid->column('created_at', __('Created at'));
+        // $grid->column('updated_at', __('Updated at'));
 
         return $grid;
     }
@@ -79,6 +87,9 @@ class BarangController extends AdminController
             Satuan::get()->pluck('nama', 'id')
         );
         $form->number('jumlah_unit', __('Jumlah Unit'));
+        $form->select('parent_id', 'Parent Barang')->options(
+            Barang::get()->pluck('nama', 'id')
+        );
 
         return $form;
     }
