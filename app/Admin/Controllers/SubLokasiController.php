@@ -28,6 +28,7 @@ class SubLokasiController extends AdminController
 
         $grid->column('id', __('Id'));
         $grid->column('nama', __('Nama'));
+        $grid->column('kapasitas', 'Kapasitas');
 
         return $grid;
     }
@@ -44,6 +45,7 @@ class SubLokasiController extends AdminController
 
         $show->field('id', __('Id'));
         $show->field('nama', __('Nama'));
+        $show->field('kapasitas', 'Kapasitas');
 
         return $show;
     }
@@ -58,6 +60,7 @@ class SubLokasiController extends AdminController
         $form = new Form(new SubLokasi());
 
         $form->text('nama', __('Nama'));
+        $form->number('kapasitas', __('Kapasitas'));
 
         return $form;
     }

@@ -14,7 +14,13 @@
 Route::get('/login', 'UserLogController@index');
 Route::post('/login', 'UserLogController@login');
 Route::get('/', 'HomeController@index');
+
 Route::resource('/pembelian', PembelianController::class);
 Route::get('/pembelian/get-suplier/{id}', 'PembelianController@getSuplierDetail');
 Route::get('/pembelian/get-barang/{id}', 'PembelianController@getBarangDetail');
 Route::get('/pembelian/set-status/{id}/{status}', 'PembelianController@setStatus');
+Route::get('/pembelian/cek-kapasitas-gudang/{id}', 'PembelianController@getKapasitasSubLokasi');
+
+Route::resource('/penjualan', PenjualanController::class);
+Route::get('/penjualan/get-pelanggan/{id}', 'PenjualanController@getPelangganDetail');
+Route::get('/penjualan/get-sales/{id}', 'PenjualanController@getSalesDetail');

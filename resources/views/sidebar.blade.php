@@ -56,11 +56,15 @@
                             <li><a href="grid.html">grid system</a></li>
                         </ul>
                     </li>
+                    @if($page == 'data_penjualan' || $page == 'buat_penjualan')
+                    <li class="active">
+                    @else
                     <li>
-                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-slice"></i><span>icons</span></a>
+                    @endif
+                        <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-money"></i><span>penjualan</span></a>
                         <ul class="collapse">
-                            <li><a href="fontawesome.html">fontawesome icons</a></li>
-                            <li><a href="themify.html">themify icons</a></li>
+                            <li{{$page == 'data_penjualan' ? ' class=active' : ''}}><a href="/penjualan">Data Penjualan</a></li>
+                            <li{{$page == 'buat_penjualan' ? ' class=active' : ''}}><a href="{{route('penjualan.create')}}">Buat Penjualan</a></li>
                         </ul>
                     </li>
                     @if($page == 'data_pembelian' || $page == 'buat_pembelian')
@@ -76,8 +80,6 @@
                             <li><a href="datatable.html">datatable</a></li>
                         </ul>
                     </li>
-                    <li><a href="maps.html"><i class="ti-map-alt"></i> <span>maps</span></a></li>
-                    <li><a href="invoice.html"><i class="ti-receipt"></i> <span>Invoice Summary</span></a></li>
                     <li>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-layers-alt"></i> <span>Pages</span></a>
                         <ul class="collapse">

@@ -372,6 +372,14 @@
             }
             $('#total-cost').html(totalCost - diskon);
         });
+        $.get('/pembelian/cek-kapasitas-gudang/' + $('#sub_lokasi-0').val(), function(data) {
+            if($('#qty-0').val()) {
+                if ($('#qty-0').val() > data.sisa) {
+                    alert('Sisa kapasitas ' + data.sub_lokasi.nama + ' tidak cukup untuk pembelian unit ini.');
+                }
+            }
+        });
+        
     });
     function setBarang(id) {
         $.get('/pembelian/get-barang/' + $('#barang-'+id).val(), function(data) {
@@ -481,6 +489,11 @@
     function onChangeQty(id) {
         if($('#qty-'+id).val() > 0) {
             if($('#barang-'+id).val() != null) {
+                $.get('/pembelian/cek-kapasitas-gudang/' + $('#sub_lokasi-'+id).val(), function(data) {
+                    if ($('#qty-0').val() > data.sisa) {
+                        alert('Sisa kapasitas ' + data.sub_lokasi.nama + '('+data.sisa+') tidak cukup untuk pembelian unit ini.');
+                    }
+                });
                 var n;
                 $.each(rowTotalHarga, function(key, value) {
                     if(value.id == id) {

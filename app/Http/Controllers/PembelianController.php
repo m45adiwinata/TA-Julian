@@ -123,6 +123,7 @@ class PembelianController extends Controller
         foreach ($pembelian->barangPembelian()->get() as $key => $bp) {
             $data['total_cost'] += $bp->harga_beli;
         }
+        $data['page'] = 'data_pembelian';
         
         // dd($data);
         return view('pembelian.edit', $data);
@@ -137,7 +138,28 @@ class PembelianController extends Controller
      */
     public function update(Request $request, Pembelian $pembelian)
     {
-        //
+        foreach ($request->qty as $key => $value) {
+            if($value < 1) {
+                return redirect('pembelian/create')->with('danger', 'Kuantitas harus lebih dari atau sama dengan 1.');
+            }
+        }
+        // dd($pembelian);
+        $pembelian->barangPembelian()->delete();
+        $pembelian->suplier_id = $request->suplier;
+        $pembelian->status_id = 1;
+        $pembelian->diskon = $request->diskon;
+        $pembelian->type_diskon_id = $request->type_diskon;
+        $pembelian->save();
+        foreach ($request->barang as $key => $barang_id) {
+            $barang = new BarangPembelian;
+            $barang->barang_id = $barang_id;
+            $barang->harga_beli = $request->qty[$key] * Barang::find($barang_id)->harga;
+            $barang->lokasi_id = $request->lokasi[$key];
+            $barang->sub_lokasi_id = $request->sub_lokasi[$key];
+            $pembelian->barangPembelian()->save($barang);
+        }
+
+        return redirect('pembelian');
     }
 
     /**
@@ -192,5 +214,18 @@ class PembelianController extends Controller
         }
         
         return "success";
+    }
+
+    public function getKapasitasSubLokasi($id)
+    {
+        $sub_lokasi = SubLokasi::find($id);
+        $kapasitas_terpakai = count($sub_lokasi->stok()->get());
+        $sisa = $sub_lokasi->kapasitas - $kapasitas_terpakai;
+        $data = [
+            'sub_lokasi' => $sub_lokasi,
+            'sisa' => $sisa
+        ];
+
+        return $data;
     }
 }

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Penjualan;
+use App\Pelanggan;
+use App\Sales;
+use App\Barang;
 use Illuminate\Http\Request;
 
 class PenjualanController extends Controller
@@ -14,7 +17,10 @@ class PenjualanController extends Controller
      */
     public function index()
     {
-        //
+        $data['penjualans'] = Penjualan::get();
+        $data['page'] = 'data_penjualan';
+
+        return view('penjualan.index', $data);
     }
 
     /**
@@ -24,7 +30,17 @@ class PenjualanController extends Controller
      */
     public function create()
     {
-        //
+        $data['page'] = 'buat_penjualan';
+        if (count(Penjualan::get()) == 0) {
+            $data['new_id'] = 1;
+        } else {
+            $data['new_id'] = end(Penjualan::get())[0]->id + 1;
+        }
+        $data['pelanggans'] = Pelanggan::get();
+        $data['saleses'] = Sales::get();
+        $data['barangs'] = Barang::get();
+        
+        return view('penjualan.create', $data);
     }
 
     /**
@@ -35,7 +51,7 @@ class PenjualanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
     }
 
     /**
@@ -81,5 +97,17 @@ class PenjualanController extends Controller
     public function destroy(Penjualan $penjualan)
     {
         //
+    }
+
+    public function getPelangganDetail($id)
+    {
+        $pelanggan = Pelanggan::find($id);
+        return $pelanggan;
+    }
+
+    public function getSalesDetail($id)
+    {
+        $sales = Sales::find($id);
+        return $sales;
     }
 }
