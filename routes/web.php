@@ -24,3 +24,4 @@ Route::get('/pembelian/cek-kapasitas-gudang/{id}', 'PembelianController@getKapas
 Route::resource('/penjualan', PenjualanController::class);
 Route::get('/penjualan/get-pelanggan/{id}', 'PenjualanController@getPelangganDetail');
 Route::get('/penjualan/get-sales/{id}', 'PenjualanController@getSalesDetail');
+Route::get('/penjualan/set-status-barang-penjualan/{id}/{barang_id}/{value}', 'PenjualanController@setStatusBarangPenjualan');

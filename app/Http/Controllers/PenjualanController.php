@@ -147,4 +147,12 @@ class PenjualanController extends Controller
         $sales = Sales::find($id);
         return $sales;
     }
+
+    public function setStatusBarangPenjualan($id, $barang_id, $value)
+    {
+        $penjualan = Penjualan::find($id);
+        $barang = $penjualan->barangPenjualan()->where('barang_id', $barang_id)->first();
+        $barang->status_id = $value;
+        $barang->save();
+    }
 }

@@ -333,21 +333,59 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
 @section('script')
 <script type="text/javascript">
-    var idPemb;
+    var idPenj;
+    var idBar;
     var dataPenjualan = <?php echo($penjualans) ?>;
     $(document).ready(function() {
-
+        $('#close-modal-status')[0].onclick = function() {
+            var data;
+            $.each(dataPenjualan, function(key, value) {
+                if(value.id == idPenj) {
+                    data = value;
+                    return false;
+                }
+            });
+            $('#myModal').css('display', 'none');
+            $('#modal-barang').css('display', 'block');
+        }
+        $('#close-modal-barang')[0].onclick = function() {
+            $('#modal-barang').css('display', 'none');
+        }
+        $('#modal-yes').click(function() {
+            $.get('/penjualan/set-status-barang-penjualan/'+idPenj+'/'+idBar+'/'+$('#status-'+idBar).val(), function(data) {
+                console.log('success');
+                $.each(dataPenjualan, function(key, value) {
+                    if(value.id == idPenj) {
+                        data = value;
+                        return false;
+                    }
+                    $.each(data.barangs, function(key, val) {
+                        if(val.id == idBar) {
+                            val.status_id = $('#status-'+idBar).val();
+                            return false;
+                        }
+                    });
+                });
+                $('#myModal').css('display', 'none');
+                $('#modal-barang').css('display', 'block');
+            });
+        });
+        $('#modal-no').click(function() {
+            $('#myModal').css('display', 'none');
+            $('#modal-barang').css('display', 'block');
+        });
     });
     function lihatBarang(id) {
         $('#table-barang').html('');
         var data;
+        idPenj = id;
         $.each(dataPenjualan, function(key, value) {
             if(id == value.id) {
                 data = value;
                 return false;
             }
         });
-        console.log(data);
+        console.log(data.barangs);
         $.each(data.barangs, function(key, value) {
             $('#table-barang').append(
                 '<tr>'+
@@ -357,7 +395,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
                     '<td>'+value.harga+'</td>'+
                     '<td>'+value.harga_jual+'</td>'+
                     '<td>'+
-                    '<select id="status-'+value.id+'">'+
+                    '<select id="status-'+value.barang_id+'" onchange="changeStatus('+value.barang_id+')">'+
                         '@foreach($statuses as $status)'+
                         '<option value="{{$status->id}}">{{$status->nama}}</option>'+
                         '@endforeach'+
@@ -365,39 +403,26 @@ body {font-family: Arial, Helvetica, sans-serif;}
                     '</td>'+
                 '</tr>'
             );
-            $('#status-'+value.id).val(value.status_id);
+            $('#status-'+value.barang_id).val(value.status_id);
         });
         $('#modal-barang').css('display', 'block');
     }
-    $('#close-modal-status')[0].onclick = function() {
-        var data;
-        $.each(dataPenjualan, function(key, value) {
-            if(value.id == idPemb) {
-                data = value;
-                return false;
-            }
-        });
-        $('#status-'+idPemb).val(data.status_id);
-        $('#myModal').css('display', 'none');
-    }
-    $('#close-modal-barang')[0].onclick = function() {
-        $('#modal-barang').css('display', 'none');
-    }
+    
     window.onclick = function(event) {
         if (event.target == document.getElementById("myModal")) {
             var data;
-            $.each(dataPembelian, function(key, value) {
-                if(value.id == idPemb) {
-                    data = value;
-                    return false;
-                }
-            });
-            $('#status-'+idPemb).val(data.status_id);
             $('#myModal').css('display', 'none');
+            $('#modal-barang').css('display', 'block');
         }
         if (event.target == document.getElementById("modal-barang")) {
             $('#modal-barang').css('display', 'none');
         }
+    }
+    function changeStatus(id) {
+        console.log('hello '+id);
+        idBar = id;
+        $('#modal-barang').css('display', 'none');
+        $('#myModal').attr({'style': 'display: block'});
     }
 </script>
 @endsection
