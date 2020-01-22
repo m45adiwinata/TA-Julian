@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\StokBarang;
+use App\Barang;
+use App\Lokasi;
+use App\SubLokasi;
 use Illuminate\Http\Request;
 
 class StokBarangController extends Controller
@@ -14,7 +17,12 @@ class StokBarangController extends Controller
      */
     public function index()
     {
-        //
+        $data['page'] = 'stok';
+        $data['title'] = 'Stok';
+        $data['sub_title'] = 'Data';
+        $data['sub_link'] = '/stok-barang';
+
+        return view('stok.index');
     }
 
     /**
@@ -24,7 +32,10 @@ class StokBarangController extends Controller
      */
     public function create()
     {
-        //
+        $data['barangs'] = Barang::get();
+        $data['lokasis'] = Lokasi::get();
+        $data['sub_lokasis'] = SubLokasi::get();
+        return view('stok.create', $data);
     }
 
     /**
@@ -35,7 +46,16 @@ class StokBarangController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        while ($request->jumlah > 0) {
+            $data = new StokBarang;
+            $data->barang_id = $request->barang_id;
+            $data->lokasi_id = $request->lokasi_id;
+            $data->sub_lokasi_id = $request->sub_lokasi_id;
+            $data->save();
+            $request->jumlah--;
+        }
+
+        return redirect('stok-barang/create');
     }
 
     /**
