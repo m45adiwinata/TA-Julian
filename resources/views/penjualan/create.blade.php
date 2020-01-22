@@ -172,32 +172,7 @@
             </div>
         </div>
         <!-- header area end -->
-        <!-- page title area start -->
-        <div class="page-title-area">
-            <div class="row align-items-center">
-                <div class="col-sm-6">
-                    <div class="breadcrumbs-area clearfix">
-                        <h4 class="page-title pull-left">Dashboard</h4>
-                        <ul class="breadcrumbs pull-left">
-                            <li><a href="index.html">Home</a></li>
-                            <li><span>Pembelian</span></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-sm-6 clearfix">
-                    <div class="user-profile pull-right">
-                        <img class="avatar user-thumb" src="{{asset('assets/images/author/avatar.png')}}" alt="avatar">
-                        <h4 class="user-name dropdown-toggle" data-toggle="dropdown">Kumkum Rai <i class="fa fa-angle-down"></i></h4>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Message</a>
-                            <a class="dropdown-item" href="#">Settings</a>
-                            <a class="dropdown-item" href="#">Log Out</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- page title area end -->
+        @include('titlebar')
         @if(session()->get('danger'))
         <div class="alert alert-danger">
             {{ session()->get('danger') }}  
@@ -207,7 +182,7 @@
             <div class="row">
                 <div class="col-lg-12 mt-5">
                     <div class="card">
-                        <form method="POST" action="{{route('pembelian.store')}}">
+                        <form method="POST" action="{{route('penjualan.store')}}">
                             @csrf
                             <div class="card-body">
                                 <div class="invoice-area">
@@ -439,7 +414,7 @@
                         '@endforeach'+
                     '</select>'+
                 '</td>'+
-                '<td><input type="number" value="1" name="qty['+jmlBarang+']" style="width:50px;" id="qty-'+jmlBarang+'" onchange="onChangeQty('+jmlBarang+')"></td>'+
+                '<td class="text-center"><input type="number" value="1" name="qty['+jmlBarang+']" style="width:50px;" id="qty-'+jmlBarang+'" onchange="onChangeQty('+jmlBarang+')"></td>'+
                 '<td id="uc-'+jmlBarang+'"></td>'+
                 '<td id="total-'+jmlBarang+'"></td>'+
                 '<td onclick="hapusRow('+jmlBarang+')">del</td>'+

@@ -6,6 +6,8 @@ use App\Penjualan;
 use App\Pelanggan;
 use App\Sales;
 use App\Barang;
+use App\BarangPenjualan;
+use App\Status;
 use Illuminate\Http\Request;
 
 class PenjualanController extends Controller
@@ -18,7 +20,20 @@ class PenjualanController extends Controller
     public function index()
     {
         $data['penjualans'] = Penjualan::get();
+        foreach ($data['penjualans'] as $key => $penjualan) {
+            $penjualan->barangs = $penjualan->barangPenjualan()->get();
+            foreach ($penjualan->barangs as $key => $barang) {
+                $temp = $barang->barang()->first();
+                $barang->nama = $temp->nama;
+                $barang->harga = $temp->harga;
+                $barang->qty = $barang->harga_jual / $temp->harga_jual;
+            }
+        }
+        $data['statuses'] = Status::get();
         $data['page'] = 'data_penjualan';
+        $data['title'] = 'Penjualan';
+        $data['sub_title'] = 'Data';
+        $data['sub_link'] = '/penjualan';
 
         return view('penjualan.index', $data);
     }
@@ -39,6 +54,9 @@ class PenjualanController extends Controller
         $data['pelanggans'] = Pelanggan::get();
         $data['saleses'] = Sales::get();
         $data['barangs'] = Barang::get();
+        $data['title'] = 'Penjualan';
+        $data['sub_title'] = 'Buat';
+        $data['sub_link'] = '/penjualan/create';
         
         return view('penjualan.create', $data);
     }
@@ -51,7 +69,26 @@ class PenjualanController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $this->validate($request, [
+            'pelanggan_id' => 'required',
+            'sales_id' => 'required'
+        ]);
+        // dd($request);
+        $data = new Penjualan;
+        $data->pelanggan_id = $request->pelanggan_id;
+        $data->sales_id = $request->sales_id;
+        $data->diskon = $request->diskon;
+        $data->type_diskon = $request->type_diskon;
+        $data->save();
+        foreach ($request->barang as $key => $barang_id) {
+            $barang = new BarangPenjualan;
+            $barang->barang_id = $barang_id;
+            $barang->harga_jual = $request->qty[$key] * Barang::find($barang_id)->harga;
+            $barang->status_id = 1;
+            $data->barangPenjualan()->save($barang);
+        }
+
+        return redirect('penjualan');
     }
 
     /**

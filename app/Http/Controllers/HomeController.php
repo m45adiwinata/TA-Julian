@@ -13,6 +13,9 @@ class HomeController extends Controller
             return redirect('/login');
         }
         $data['page'] = 'home';
+        $data['title'] = 'Dashboard';
+        $data['sub_title'] = 'Home';
+        $data['sub_link'] = '/';
         return view('home', $data);
     }
 }

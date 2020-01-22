@@ -34,6 +34,9 @@ class PembelianController extends Controller
         }
         $data['statuses'] = Status::get();
         $data['page'] = 'data_pembelian';
+        $data['title'] = 'Pembelian';
+        $data['sub_title'] = 'Data';
+        $data['sub_link'] = '/pembelian';
 
         return view('pembelian.index', $data);
     }
@@ -57,6 +60,9 @@ class PembelianController extends Controller
         $data['lokasis'] = Lokasi::get();
         $data['sub_lokasis'] = SubLokasi::get();
         $data['page'] = 'buat_pembelian';
+        $data['title'] = 'Pembelian';
+        $data['sub_title'] = 'Buat';
+        $data['sub_link'] = '/pembelian/create';
 
         return view('pembelian.create', $data);
     }

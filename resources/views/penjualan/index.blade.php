@@ -215,32 +215,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
             </div>
         </div>
         <!-- header area end -->
-        <!-- page title area start -->
-        <div class="page-title-area">
-            <div class="row align-items-center">
-                <div class="col-sm-6">
-                    <div class="breadcrumbs-area clearfix">
-                        <h4 class="page-title pull-left">Dashboard</h4>
-                        <ul class="breadcrumbs pull-left">
-                            <li><a href="index.html">Home</a></li>
-                            <li><span>Table Layout</span></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-sm-6 clearfix">
-                    <div class="user-profile pull-right">
-                        <img class="avatar user-thumb" src="assets/images/author/avatar.png" alt="avatar">
-                        <h4 class="user-name dropdown-toggle" data-toggle="dropdown">Kumkum Rai <i class="fa fa-angle-down"></i></h4>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Message</a>
-                            <a class="dropdown-item" href="#">Settings</a>
-                            <a class="dropdown-item" href="#">Log Out</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- page title area end -->
+        @include('titlebar')
         <div class="main-content-inner">
             <div class="row">
                 <!-- Hoverable Rows Table end -->
@@ -270,15 +245,22 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                                 <td>{{$penjualan->sales()->first()->nama}}</td>
                                                 <td><span id="lihat" class="status-p bg-primary" onclick="lihatBarang({{$penjualan->id}})">Lihat Barang</span></td>
                                                 <td>
-                                                    @php $temp = 0; @endphp
-                                                    @foreach($penjualan->barangPenjualan()->get() as $barang)
+                                                    @php $temp = 0;
+                                                    foreach($penjualan->barangPenjualan()->get() as $barang) {
                                                         $temp += $barang->harga_jual;
-                                                    @endforeach
-                                                    {{$temp}}
+                                                    }
+                                                    if($penjualan->type_diskon == 1) {
+                                                        $temp -= $temp * $penjualan->diskon / 100;
+                                                    }
+                                                    else {
+                                                        $temp -= $penjualan->diskon;
+                                                    }
+                                                    @endphp
+                                                    {{number_format($temp, 2, ',', '.')}}
                                                 </td>
                                                 <td>
                                                     <ul class="d-flex justify-content-center">
-                                                        <li class="mr-3"><a href="{{route('pembelian.edit', $pembelian->id)}}" class="text-secondary"><i class="fa fa-edit"></i></a></li>
+                                                        <li class="mr-3"><a href="{{route('penjualan.edit', $penjualan->id)}}" class="text-secondary"><i class="fa fa-edit"></i></a></li>
                                                     </ul>
                                                 </td>
                                             </tr>
@@ -330,6 +312,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                             <th>Qty</th>
                                             <th>Harga</th>
                                             <th>Total</th>
+                                            <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody id="table-barang">
@@ -345,4 +328,76 @@ body {font-family: Arial, Helvetica, sans-serif;}
     </div>
 </div>
 <!-- page container area end -->
+
+@endsection
+
+@section('script')
+<script type="text/javascript">
+    var idPemb;
+    var dataPenjualan = <?php echo($penjualans) ?>;
+    $(document).ready(function() {
+
+    });
+    function lihatBarang(id) {
+        $('#table-barang').html('');
+        var data;
+        $.each(dataPenjualan, function(key, value) {
+            if(id == value.id) {
+                data = value;
+                return false;
+            }
+        });
+        console.log(data);
+        $.each(data.barangs, function(key, value) {
+            $('#table-barang').append(
+                '<tr>'+
+                    '<td>'+(key+1)+'</td>'+
+                    '<td>'+value.nama+'</td>'+
+                    '<td>'+value.qty+'</td>'+
+                    '<td>'+value.harga+'</td>'+
+                    '<td>'+value.harga_jual+'</td>'+
+                    '<td>'+
+                    '<select id="status-'+value.id+'">'+
+                        '@foreach($statuses as $status)'+
+                        '<option value="{{$status->id}}">{{$status->nama}}</option>'+
+                        '@endforeach'+
+                    '</select>'+
+                    '</td>'+
+                '</tr>'
+            );
+            $('#status-'+value.id).val(value.status_id);
+        });
+        $('#modal-barang').css('display', 'block');
+    }
+    $('#close-modal-status')[0].onclick = function() {
+        var data;
+        $.each(dataPenjualan, function(key, value) {
+            if(value.id == idPemb) {
+                data = value;
+                return false;
+            }
+        });
+        $('#status-'+idPemb).val(data.status_id);
+        $('#myModal').css('display', 'none');
+    }
+    $('#close-modal-barang')[0].onclick = function() {
+        $('#modal-barang').css('display', 'none');
+    }
+    window.onclick = function(event) {
+        if (event.target == document.getElementById("myModal")) {
+            var data;
+            $.each(dataPembelian, function(key, value) {
+                if(value.id == idPemb) {
+                    data = value;
+                    return false;
+                }
+            });
+            $('#status-'+idPemb).val(data.status_id);
+            $('#myModal').css('display', 'none');
+        }
+        if (event.target == document.getElementById("modal-barang")) {
+            $('#modal-barang').css('display', 'none');
+        }
+    }
+</script>
 @endsection
