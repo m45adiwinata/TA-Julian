@@ -216,7 +216,11 @@
                                         </div>
                                         <div class="col-md-6 text-md-right">
                                             <ul class="invoice-date">
-                                                <li>Tanggal Pembelian : {{date('d-m-Y')}}</li>
+                                                <li>Tanggal Pembelian :
+                                                    <input type="date" name="created_at" style="width: 150px;">
+                                                </li>
+                                                    
+                                                <!-- <li>Tanggal Pembelian : {{date('d-m-Y')}}</li> -->
                                                 <!-- <li>Due Date : sat 18 | 07 | 2018</li> -->
                                             </ul>
                                         </div>

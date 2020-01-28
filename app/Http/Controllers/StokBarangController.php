@@ -46,14 +46,12 @@ class StokBarangController extends Controller
      */
     public function store(Request $request)
     {
-        while ($request->jumlah > 0) {
-            $data = new StokBarang;
-            $data->barang_id = $request->barang_id;
-            $data->lokasi_id = $request->lokasi_id;
-            $data->sub_lokasi_id = $request->sub_lokasi_id;
-            $data->save();
-            $request->jumlah--;
-        }
+        $data = StokBarang::firstOrNew(['barang_id' => $request->barang_id, 'lokasi_id' => $request->lokasi_id, 'sub_lokasi_id' => $request->sub_lokasi_id]);
+        $data->barang_id = $request->barang_id;
+        $data->lokasi_id = $request->lokasi_id;
+        $data->sub_lokasi_id = $request->sub_lokasi_id;
+        $data->ketersediaan += $request->jumlah;
+        $data->save();
 
         return redirect('stok-barang/create');
     }

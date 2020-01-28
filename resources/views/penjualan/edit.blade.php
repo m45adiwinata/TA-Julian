@@ -182,7 +182,8 @@
             <div class="row">
                 <div class="col-lg-12 mt-5">
                     <div class="card">
-                        <form method="POST" action="{{route('penjualan.store')}}">
+                        <form method="POST" action="{{route('penjualan.update', $penjualan->id)}}">
+                            @method('PATCH')
                             @csrf
                             <div class="card-body">
                                 <div class="invoice-area">
@@ -192,7 +193,7 @@
                                                 <span>PENJUALAN</span>
                                             </div>
                                             <div class="iv-right col-6 text-md-right">
-                                                <span>#{{$new_id}}</span>
+                                                <span>#{{$penjualan->id}}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -204,7 +205,7 @@
                                                     <select class="form-control" name="pelanggan_id" id="pelanggan">
                                                         <option selected="selected" disabled="disabled">Pelanggan...</option>
                                                         @foreach($pelanggans as $pelanggan)
-                                                        <option value="{{$pelanggan->id}}">{{$pelanggan->nama}}</option>
+                                                        <option value="{{$pelanggan->id}}"{{$penjualan->pelanggan_id == $pelanggan->id ? ' selected="selected"' : ''}}>{{$pelanggan->nama}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -212,23 +213,23 @@
                                                     <select class="form-control" name="sales_id" id="sales">
                                                         <option selected="selected" disabled="disabled">Sales...</option>
                                                         @foreach($saleses as $sales)
-                                                        <option value="{{$sales->id}}">{{$sales->nama}}</option>
+                                                        <option value="{{$sales->id}}"{{$penjualan->sales_id == $sales->id ? ' selected="selected"' : ''}}>{{$sales->nama}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <h3>Pelanggan</h3>
-                                                        <h5 id="nama-pelanggan"></h5>
-                                                        <p id="alamat-pelanggan"></p>
-                                                        <p id="no_telpon-pelanggan"></p>
-                                                        <p id="contact_person-pelanggan"></p>
+                                                        <h5 id="nama-pelanggan">{{$penjualan->pelanggan()->first()->nama}}</h5>
+                                                        <p id="alamat-pelanggan">{{$penjualan->pelanggan()->first()->alamat}}</p>
+                                                        <p id="no_telpon-pelanggan">{{$penjualan->pelanggan()->first()->no_telpon}}</p>
+                                                        <p id="contact_person-pelanggan">{{$penjualan->pelanggan()->first()->contact_person}}</p>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <h3>Sales</h3>
-                                                        <h5 id="nama-sales"></h5>
-                                                        <p id="alamat-sales"></p>
-                                                        <p id="no_telpon-sales"></p>
+                                                        <h5 id="nama-sales">{{$penjualan->sales()->first()->nama}}</h5>
+                                                        <p id="alamat-sales">{{$penjualan->sales()->first()->alamat}}</p>
+                                                        <p id="no_telpon-sales">{{$penjualan->sales()->first()->no_telpon}}</p>
                                                     </div>
                                                 </div>
                                                 
@@ -236,7 +237,7 @@
                                         </div>
                                         <div class="col-md-6 text-md-right">
                                             <ul class="invoice-date">
-                                                <li>Tanggal Penjualan : <input type="date" name="created_at"></li>
+                                                <li>Tanggal Penjualan : <input type="date" name="created_at" value="{{date('Y-m-d', strtotime($penjualan->created_at))}}"></li>
                                                 <!-- <li>Due Date : sat 18 | 07 | 2018</li> -->
                                             </ul>
                                         </div>
@@ -253,20 +254,22 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="barangs">
-                                                <tr id="row-barang-0">
+                                                @foreach($penjualan->barangPenjualan()->get() as $key => $jual)
+                                                <tr id="row-barang-{{$key}}">
                                                     <td class="text-left">
-                                                        <select name="barang[0]" id="barang-0" style="width:100%;" onchange="setBarang(0)">
+                                                        <select name="barang[{{$key}}]" id="barang-{{$key}}" style="width:100%;" onchange="setBarang({{$key}})">
                                                             <option disabled="disabled" selected="selected">Barang...</option>
                                                             @foreach($barangs as $barang)
-                                                            <option value="{{$barang->id}}">{{$barang->nama}}</option>
+                                                            <option value="{{$barang->id}}"{{$jual->barang_id == $barang->id ? ' selected="selected"' : ''}}>{{$barang->nama}}</option>
                                                             @endforeach
                                                         </select>
                                                     </td>
-                                                    <td class="text-center"><input type="number" value="1" name="qty[0]" style="width:50px;" id="qty-0" onchange="onChangeQty(0)"></td>
-                                                    <td id="uc-0"></td>
-                                                    <td id="total-0"></td>
-                                                    <td onclick="hapusRow(0)">del</td>
+                                                    <td class="text-center"><input type="number" value="{{$jual->harga_jual/$jual->barang()->first()->harga_jual}}" name="qty[{{$key}}]" style="width:50px;" id="qty-{{$key}}" onchange="onChangeQty({{$key}})"></td>
+                                                    <td id="uc-{{$key}}">{{$jual->barang()->first()->harga_jual}}</td>
+                                                    <td id="total-{{$key}}">{{$jual->harga_jual}}</td>
+                                                    <td onclick="hapusRow({{$key}})">del</td>
                                                 </tr>
+                                                @endforeach
                                                 <tr id="barang-new">
                                                     <td colspan="5" class="text-center" onclick="tambahRow()">ADD</td>
                                                 </tr>
@@ -275,19 +278,21 @@
                                                 <tr>
                                                     <td>
                                                         <div class="form-group">
-                                                            <input class="form-control" placeholder="Diskon..." type="number" name="diskon" id="diskon">
+                                                            <input class="form-control" placeholder="Diskon..." type="number" name="diskon" id="diskon" value="{{$penjualan->diskon}}">
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="form-group">
                                                             <select class="form-control" name="type_diskon" id="type_diskon">
-                                                                <option value="0">Jumlah</option>
-                                                                <option value="1">Persen</option>
+                                                                <option value="0"{{$penjualan->type_diskon == 0 ? ' selected="selected"' : ''}}>Jumlah</option>
+                                                                <option value="1"{{$penjualan->type_diskon == 1 ? ' selected="selected"' : ''}}>Persen</option>
                                                             </select>
                                                         </div>
                                                     </td>
                                                     <td>total cost :</td>
-                                                    <td colspan="2">Rp <span id="total-cost">0</span></td>
+                                                    <td colspan="2">Rp <span id="total-cost">
+                                                        {{$penjualan->type_diskon == 0 ? $total_cost-$penjualan->diskon : $total_cost-$total_cost*$penjualan->diskon/100}}
+                                                    </span></td>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -308,10 +313,13 @@
 @endsection
 @section('script')
 <script>
-    var jmlBarang = 1;
-    var tempBarang = [];
-    var totalCost = 0;
+    var jmlBarang = <?php echo(count($penjualan->barangPenjualan()->get())) ?>;
+    var tempBarang = <?php echo($penjualan->barang()->get()) ?>;
+    var totalCost = <?php echo($total_cost) ?>;
     var rowTotalHarga = [];
+    @foreach($penjualan->barangPenjualan()->get() as $key => $bp)
+    rowTotalHarga.push({"id" : {{$key}}, "total": {{$bp->harga_jual}}});
+    @endforeach
     var diskon;
     $(document).ready(function() {
         $('#pelanggan').select2();
@@ -331,7 +339,9 @@
                 $('#no_telpon-sales').html(data.no_telpon);
             });
         });
-        $('#barang-0').select2();
+        @foreach($penjualan->barangPenjualan()->get() as $key => $bp)
+        $('#barang-{{$key}}').select2();
+        @endforeach
         $('#type_diskon').select2();
         $('#diskon').change(function() {
             if ($('#diskon').val()) {

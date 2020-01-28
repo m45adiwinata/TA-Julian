@@ -88,6 +88,7 @@ class PembelianController extends Controller
         $data->status_id = 1;
         $data->diskon = $request->diskon;
         $data->type_diskon_id = $request->type_diskon;
+        $data->created_at = $request->created_at;
         $data->save();
         foreach ($request->barang as $key => $barang_id) {
             $barang = new BarangPembelian;
@@ -130,6 +131,9 @@ class PembelianController extends Controller
             $data['total_cost'] += $bp->harga_beli;
         }
         $data['page'] = 'data_pembelian';
+        $data['title'] = 'Pembelian';
+        $data['sub_title'] = 'Data';
+        $data['sub_link'] = '/pembelian';
         
         // dd($data);
         return view('pembelian.edit', $data);
@@ -198,24 +202,25 @@ class PembelianController extends Controller
         $pembelian->save();
         if ($status == 2) {
             foreach ($pembelian->barangPembelian()->get() as $key => $beli) {
-                $harga_unit = $beli->barang()->first()->harga;
-                for ($i=0; $i < $beli->harga_beli/$harga_unit; $i++) { 
-                    $stok = new StokBarang;
-                    $stok->barang_id = $beli->barang_id;
-                    $stok->lokasi_id  = $beli->lokasi_id;
-                    $stok->sub_lokasi_id = $beli->sub_lokasi_id;
-                    $stok->save();
-                }
+                $barang = $beli->barang()->first();
+                $harga_unit = $barang->harga;
+                $jumlah = $beli->harga_beli / $harga_unit;
+                $stok = StokBarang::firstOrNew(['barang_id' => $barang->id, 'lokasi_id' => $beli->lokasi_id, 'sub_lokasi_id' => $beli->sub_lokasi_id]);
+                $stok->lokasi_id = $beli->lokasi_id;
+                $stok->sub_lokasi_id = $beli->sub_lokasi_id;
+                $stok->ketersediaan += $jumlah;
+                $barang->stok()->save($stok);
             }
         } else {
             foreach ($pembelian->barangPembelian()->get() as $key => $beli) {
                 $barang = $beli->barang()->first();
                 $harga_unit = $barang->harga;
-                if (count($barang->stok()->get()) > 0) {
-                    for ($i=0; $i < $beli->harga_beli/$harga_unit; $i++) { 
-                        $barang->stok()->get()[0]->delete();
-                    }
-                }
+                $jumlah = $beli->harga_beli / $harga_unit;
+                $stok = StokBarang::firstOrNew(['barang_id' => $barang->id, 'lokasi_id' => $beli->lokasi_id, 'sub_lokasi_id' => $beli->sub_lokasi_id]);
+                $stok->lokasi_id = $beli->lokasi_id;
+                $stok->sub_lokasi_id = $beli->sub_lokasi_id;
+                $stok->ketersediaan -= $jumlah;
+                $barang->stok()->save($stok);
             }
         }
         
@@ -225,7 +230,10 @@ class PembelianController extends Controller
     public function getKapasitasSubLokasi($id)
     {
         $sub_lokasi = SubLokasi::find($id);
-        $kapasitas_terpakai = count($sub_lokasi->stok()->get());
+        $kapasitas_terpakai = 0;
+        foreach ($sub_lokasi->stok()->get() as $key => $stok) {
+            $kapasitas_terpakai += $stok->ketersediaan;
+        }
         $sisa = $sub_lokasi->kapasitas - $kapasitas_terpakai;
         $data = [
             'sub_lokasi' => $sub_lokasi,

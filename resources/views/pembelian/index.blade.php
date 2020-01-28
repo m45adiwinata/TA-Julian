@@ -232,6 +232,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                                 <th scope="col">ID</th>
                                                 <th scope="col">Suplier</th>
                                                 <th scope="col">Total Harga</th>
+                                                <th scope="col">Diskon</th>
                                                 <th scope="col">Barang</th>
                                                 <th scope="col">status</th>
                                                 <th scope="col">action</th>
@@ -242,7 +243,38 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                             <tr>
                                                 <th scope="row">{{$key+1}}</th>
                                                 <td>{{$pembelian->suplier()->first()->nama}}</td>
-                                                <td>{{count($pembelian->barang()->get())}}</td>
+                                                <td>
+                                                    Rp 
+                                                    @php
+                                                    $temp = 0;
+                                                    foreach($pembelian->barangPembelian()->get() as $beli) {
+                                                        $temp += $beli->harga_beli;
+                                                    }
+                                                    if($pembelian->type_diskon_id == 0) {
+                                                        $temp -= $pembelian->diskon;
+                                                    }
+                                                    else {
+                                                        $diskon = $temp * $pembelian->diskon / 100;
+                                                        $temp -= $diskon;
+                                                    }
+                                                    echo number_format($temp, 2, ',', '.');
+                                                    @endphp
+                                                </td>
+                                                <td>
+                                                    @php
+                                                    if($pembelian->type_diskon_id == 0) {
+                                                        if($pembelian->diskon) {
+                                                            echo "Rp ".$pembelian->diskon;
+                                                        }
+                                                        else {
+                                                            echo "Rp 0";
+                                                        }
+                                                    }
+                                                    else {
+                                                        echo $pembelian->diskon."%";
+                                                    }
+                                                    @endphp
+                                                </td>
                                                 <td>
                                                     <span id="lihat" class="status-p bg-primary" onclick="lihatBarang({{$pembelian->id}})">Lihat Barang</span>
                                                 </td>
