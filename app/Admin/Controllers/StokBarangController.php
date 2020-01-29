@@ -39,6 +39,7 @@ class StokBarangController extends AdminController
         $grid->column('sub_lokasi_id', __('Sub lokasi id'))->display(function($id) {
             return SubLokasi::find($id)->nama;
         });
+        $grid->column('ketersediaan', 'ketersediaan');
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 

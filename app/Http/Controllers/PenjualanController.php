@@ -143,6 +143,7 @@ class PenjualanController extends Controller
         $penjualan->type_diskon = $request->type_diskon;
         $penjualan->created_at = $request->created_at;
         $penjualan->save();
+        // dd($request);
         if (count($request->barang) == count($penjualan->barangPenjualan()->get())) {
             $r_barang = $request->barang;
             foreach ($penjualan->barangPenjualan()->get() as $key => $jual) {
@@ -154,12 +155,15 @@ class PenjualanController extends Controller
         } else {
             $r_barang = $request->barang;
             if (count($r_barang) > count($penjualan->barangPenjualan()->get())) {
+                $i = 0;
                 foreach ($penjualan->barangPenjualan()->get() as $key => $jual) {
                     $jual->barang_id = $r_barang[$key];
                     $jual->harga_jual = $request->qty[$key] * Barang::find($r_barang[$key])->harga_jual;
                     $jual->status_id = 1;
                     $jual->save();
+                    $i++;
                 }
+                $key = $i;
                 while ($key < count($r_barang)) {
                     $barang = new BarangPenjualan;
                     $barang->barang_id = $r_barang[$key];
@@ -170,18 +174,24 @@ class PenjualanController extends Controller
                 }
             } else {
                 $barang_penjualan = $penjualan->barangPenjualan()->get();
+                $i = 0;
                 foreach ($r_barang as $key => $req) {
+                    echo $req.' <=> ';
+                    echo $barang_penjualan[$key]->barang_id.'<br>';
                     $barang_penjualan[$key]->barang_id = $req;
-                    $barang_penjualan[$key]->harga_jual = $request->qty[$key] * Barang::find($r_barang[$key])->harga_jual;
+                    $barang_penjualan[$key]->harga_jual = $request->qty[$key] * Barang::find($req)->harga_jual;
                     $barang_penjualan[$key]->status_id = 1;
                     $barang_penjualan[$key]->save();
+                    $i++;
                 }
+                $key = $i;
                 while ($key < count($barang_penjualan)) {
                     $barang_penjualan[$key]->delete();
                     $key++;
                 }
             }
         }
+        dd($request);
         
         return redirect('penjualan');
     }
