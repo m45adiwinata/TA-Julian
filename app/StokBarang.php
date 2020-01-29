@@ -12,4 +12,9 @@ class StokBarang extends Model
     {
         return $this->belongsTo('App\Barang');
     }
+
+    public function subLokasi()
+    {
+    	return $this->belongsTo('App\SubLokasi');
+    }
 }

@@ -22,4 +22,9 @@ class Barang extends Model
     {
         return $this->hasOne('App\Barang', 'parent_id');
     }
+
+    public function parent()
+    {
+        return $this->belongsTo('App\Barang', 'parent_id');
+    }
 }

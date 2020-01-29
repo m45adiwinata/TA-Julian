@@ -230,6 +230,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                         <thead class="text-uppercase">
                                             <tr>
                                                 <th scope="col">ID</th>
+                                                <th scope="col">Tanggal</th>
                                                 <th scope="col">Suplier</th>
                                                 <th scope="col">Total Harga</th>
                                                 <th scope="col">Diskon</th>
@@ -242,6 +243,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                             @foreach($pembelians as $key => $pembelian)
                                             <tr>
                                                 <th scope="row">{{$key+1}}</th>
+                                                <td>{{date('d-m-Y', strtotime($pembelian->created_at))}}</td>
                                                 <td>{{$pembelian->suplier()->first()->nama}}</td>
                                                 <td>
                                                     Rp 

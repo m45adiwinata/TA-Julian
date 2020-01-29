@@ -8,6 +8,7 @@ use App\Sales;
 use App\Barang;
 use App\BarangPenjualan;
 use App\Status;
+use App\SubLokasi;
 use Illuminate\Http\Request;
 
 class PenjualanController extends Controller
@@ -137,62 +138,52 @@ class PenjualanController extends Controller
      */
     public function update(Request $request, Penjualan $penjualan)
     {
+        foreach ($penjualan->barangPenjualan()->get() as $key => $jual) {
+            if ($jual->status_id == 2) {
+                $barang = $jual->barang()->first();
+                $stoks = $barang->stok()->get();
+                $jumlah_barang = $jual->harga_jual / $barang->harga_jual;
+                if ($barang->satuan_id == 1) {
+                    #barang kembali dengan aturan kapasitas sub lokasi
+                    foreach ($stoks as $key => $stok) {
+                        $sub_lokasi = $stok->subLokasi()->first();
+                        $sisa_kapasitas = $sub_lokasi->kapasitas;
+                        foreach ($sub_lokasi->stok()->where('satuan_id', 1)->get() as $key => $value) {
+                            $sisa_kapasitas -= $value->ketersediaan;
+                        }
+                        if ($sisa_kapasitas >= $jumlah_barang) {
+                            $stok->ketersediaan += $jumlah_barang;
+                            $stok->save();
+                            break;
+                        } else {
+                            $jml_kembali = $jumlah_barang - $sisa_kapasitas;
+                            $stok->ketersediaan += $jml_kembali;
+                            $stok->save();
+                            $jumlah_barang -= $jml_kembali;
+                        }
+                    }
+                } else {
+                    #barang kembali ke stoks indeks pertama tanpa aturan kapasitas sub lokasi
+                    $stoks[0]->ketersediaan += $jumlah_barang;
+                    $stoks[0]->save();
+                }
+            }
+        }
+        $penjualan->barangPenjualan()->delete();
         $penjualan->pelanggan_id = $request->pelanggan_id;
         $penjualan->sales_id = $request->sales_id;
         $penjualan->diskon = $request->diskon;
         $penjualan->type_diskon = $request->type_diskon;
         $penjualan->created_at = $request->created_at;
         $penjualan->save();
-        // dd($request);
-        if (count($request->barang) == count($penjualan->barangPenjualan()->get())) {
-            $r_barang = $request->barang;
-            foreach ($penjualan->barangPenjualan()->get() as $key => $jual) {
-                $jual->barang_id = $r_barang[$key];
-                $jual->harga_jual = $request->qty[$key] * Barang::find($r_barang[$key])->harga_jual;
-                $jual->status_id = 1;
-                $jual->save();
-            }
-        } else {
-            $r_barang = $request->barang;
-            if (count($r_barang) > count($penjualan->barangPenjualan()->get())) {
-                $i = 0;
-                foreach ($penjualan->barangPenjualan()->get() as $key => $jual) {
-                    $jual->barang_id = $r_barang[$key];
-                    $jual->harga_jual = $request->qty[$key] * Barang::find($r_barang[$key])->harga_jual;
-                    $jual->status_id = 1;
-                    $jual->save();
-                    $i++;
-                }
-                $key = $i;
-                while ($key < count($r_barang)) {
-                    $barang = new BarangPenjualan;
-                    $barang->barang_id = $r_barang[$key];
-                    $barang->harga_jual = $request->qty[$key] * Barang::find($r_barang[$key])->harga_jual;
-                    $barang->status_id = 1;
-                    $penjualan->barangPenjualan()->save($barang);
-                    $key++;
-                }
-            } else {
-                $barang_penjualan = $penjualan->barangPenjualan()->get();
-                $i = 0;
-                foreach ($r_barang as $key => $req) {
-                    echo $req.' <=> ';
-                    echo $barang_penjualan[$key]->barang_id.'<br>';
-                    $barang_penjualan[$key]->barang_id = $req;
-                    $barang_penjualan[$key]->harga_jual = $request->qty[$key] * Barang::find($req)->harga_jual;
-                    $barang_penjualan[$key]->status_id = 1;
-                    $barang_penjualan[$key]->save();
-                    $i++;
-                }
-                $key = $i;
-                while ($key < count($barang_penjualan)) {
-                    $barang_penjualan[$key]->delete();
-                    $key++;
-                }
-            }
+        foreach ($request->barang as $key => $barang_id) {
+            $barang = new BarangPenjualan;
+            $barang->barang_id = $barang_id;
+            $barang->harga_jual = $request->qty[$key] * Barang::find($barang_id)->harga_jual;
+            $barang->status_id = 1;
+            $penjualan->barangPenjualan()->save($barang);
         }
-        dd($request);
-        
+
         return redirect('penjualan');
     }
 
@@ -222,8 +213,40 @@ class PenjualanController extends Controller
     public function setStatusBarangPenjualan($id, $barang_id, $value)
     {
         $penjualan = Penjualan::find($id);
-        $barang = $penjualan->barangPenjualan()->where('barang_id', $barang_id)->first();
-        $barang->status_id = $value;
-        $barang->save();
+        $bp = $penjualan->barangPenjualan()->where('barang_id', $barang_id)->first();
+        $barang = $bp->barang()->first();
+        $jumlah = $bp->harga_jual / $barang->harga_jual;
+        if ($value == 2) {
+            foreach ($barang->stok()->get() as $key => $stok) {
+                if ($stok->ketersediaan >= $jumlah) {
+                    $stok->ketersediaan -= $jumlah;
+                    $stok->save();
+                    break;
+                } else {
+                    $sisa_jumlah = $jumlah - $stok->ketersediaan;
+                    $jumlah -= $sisa_jumlah;
+                    $stok->ketersediaan -= $sisa_jumlah;
+                    $stok->save();
+                }
+            }
+        }
+        if ($jumlah > 0) {
+            if ($barang->satuan_id == 3) {
+                $stok_barang = $barang->stok()->first();
+                $parent_barang = $barang->parent()->first();
+                $jml_dibutuhkan = ceil($jumlah / $parent_barang->jumlah_unit);
+                $stok_parent = $parent_barang->stok()->where('ketersediaan', '>=', $jml_dibutuhkan)->first();
+                if ($stok_parent) {
+                    $stok_parent->ketersediaan -= $jml_dibutuhkan;
+                    $stok_parent->save();
+                    $stok_barang->ketersediaan += $parent_barang->jumlah_unit * $jml_dibutuhkan;
+                    $stok_barang->save();
+                }
+                $bp->status_id = $value;
+                $bp->save();
+            } else {
+                return "gagal, tidak ada stok";
+            }
+        }
     }
 }
