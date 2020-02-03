@@ -198,20 +198,7 @@ class PembelianController extends Controller
     public function setStatus($id, $status)
     {
         $pembelian = Pembelian::find($id);
-        $pembelian->status_id = $status;
-        $pembelian->save();
-        if ($status == 2) {
-            foreach ($pembelian->barangPembelian()->get() as $key => $beli) {
-                $barang = $beli->barang()->first();
-                $harga_unit = $barang->harga;
-                $jumlah = $beli->harga_beli / $harga_unit;
-                $stok = StokBarang::firstOrNew(['barang_id' => $barang->id, 'lokasi_id' => $beli->lokasi_id, 'sub_lokasi_id' => $beli->sub_lokasi_id]);
-                $stok->lokasi_id = $beli->lokasi_id;
-                $stok->sub_lokasi_id = $beli->sub_lokasi_id;
-                $stok->ketersediaan += $jumlah;
-                $barang->stok()->save($stok);
-            }
-        } else {
+        if ($pembelian->status_id == 2) {
             foreach ($pembelian->barangPembelian()->get() as $key => $beli) {
                 $barang = $beli->barang()->first();
                 $harga_unit = $barang->harga;
@@ -223,6 +210,20 @@ class PembelianController extends Controller
                 $barang->stok()->save($stok);
             }
         }
+        if ($status == 2) {
+            foreach ($pembelian->barangPembelian()->get() as $key => $beli) {
+                $barang = $beli->barang()->first();
+                $harga_unit = $barang->harga;
+                $jumlah = $beli->harga_beli / $harga_unit;
+                $stok = StokBarang::firstOrNew(['barang_id' => $barang->id, 'lokasi_id' => $beli->lokasi_id, 'sub_lokasi_id' => $beli->sub_lokasi_id]);
+                $stok->lokasi_id = $beli->lokasi_id;
+                $stok->sub_lokasi_id = $beli->sub_lokasi_id;
+                $stok->ketersediaan += $jumlah;
+                $barang->stok()->save($stok);
+            }
+        }
+        $pembelian->status_id = $status;
+        $pembelian->save();
         
         return "success";
     }

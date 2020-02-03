@@ -215,38 +215,88 @@ class PenjualanController extends Controller
         $penjualan = Penjualan::find($id);
         $bp = $penjualan->barangPenjualan()->where('barang_id', $barang_id)->first();
         $barang = $bp->barang()->first();
-        $jumlah = $bp->harga_jual / $barang->harga_jual;
         if ($value == 2) {
+            $jumlah = $bp->harga_jual / $barang->harga_jual;
+            $jml_tersedia = 0;
             foreach ($barang->stok()->get() as $key => $stok) {
-                if ($stok->ketersediaan >= $jumlah) {
-                    $stok->ketersediaan -= $jumlah;
-                    $stok->save();
-                    break;
-                } else {
-                    $sisa_jumlah = $jumlah - $stok->ketersediaan;
-                    $jumlah -= $sisa_jumlah;
-                    $stok->ketersediaan -= $sisa_jumlah;
-                    $stok->save();
-                }
+                $jml_tersedia += $stok->ketersediaan;
             }
-        }
-        if ($jumlah > 0) {
             if ($barang->satuan_id == 3) {
                 $stok_barang = $barang->stok()->first();
                 $parent_barang = $barang->parent()->first();
-                $jml_dibutuhkan = ceil($jumlah / $parent_barang->jumlah_unit);
-                $stok_parent = $parent_barang->stok()->where('ketersediaan', '>=', $jml_dibutuhkan)->first();
-                if ($stok_parent) {
-                    $stok_parent->ketersediaan -= $jml_dibutuhkan;
-                    $stok_parent->save();
-                    $stok_barang->ketersediaan += $parent_barang->jumlah_unit * $jml_dibutuhkan;
-                    $stok_barang->save();
+                foreach ($parent_barang->stok()->get() as $key => $stok_parent) {
+                    $jml_tersedia += $parent_barang->jumlah_unit * $stok_parent->ketersediaan;
+                }
+            }
+            if ($jml_tersedia >= $jumlah) {
+                foreach ($barang->stok()->get() as $key => $stok) {
+                    if ($stok->ketersediaan >= $jumlah) {
+                        $stok->ketersediaan -= $jumlah;
+                        $stok->save();
+                        $jumlah = 0;
+                        break;
+                    } else {
+                        $jumlah -= $stok->ketersediaan;
+                        $stok->ketersediaan = 0;
+                        $stok->save();
+                    }
+                }
+                if ($jumlah > 0) {
+                    if ($barang->satuan_id == 3) {
+                        $stok_barang = $barang->stok()->first();
+                        $parent_barang = $barang->parent()->first();
+                        $jml_dibutuhkan = ceil($jumlah / $parent_barang->jumlah_unit);
+                        foreach ($parent_barang->stok()->get() as $key => $stok_parent) {
+                            if ($stok_parent->ketersediaan >= $jml_dibutuhkan) {
+                                $stok_parent->ketersediaan -= $jml_dibutuhkan;
+                                $stok_parent->save();
+                                $stok_barang->ketersediaan += $parent_barang->jumlah_unit * $jml_dibutuhkan - $jumlah;
+                                $stok_barang->save();
+                                $jml_dibutuhkan = 0;
+                                break;
+                            }
+                            else {
+                                $jml_dibutuhkan -= $stok_parent->ketersediaan;
+                                $stok_parent->ketersediaan = 0;
+                                $stok_parent->save();
+                                $stok_barang->ketersediaan += $parent_barang->jumlah_unit * $stok_parent->ketersediaan;
+                                $stok_barang->save();
+                            }
+                        }
+                    }
                 }
                 $bp->status_id = $value;
                 $bp->save();
+                return 1;
             } else {
                 return "gagal, tidak ada stok";
             }
+        }
+        else {
+            if ($bp->status_id == 2) {
+                $jml_kembali = $bp->harga_jual / $barang->harga_jual;
+                if ($barang->satuan_id == 1) {
+                    foreach ($barang->stok()->get() as $key => $stok) {
+                        $sub_lokasi = $stok->subLokasi()->first();
+                        $sisa_kapasitas = $sub_lokasi->kapasitas;
+                        foreach ($sub_lokasi->stok()->get() as $key => $val) {
+                            if ($val->barang()->first()->satuan_id == 1) {
+                                $sisa_kapasitas -= $val->ketersediaan;
+                            }
+                        }
+                        if ($sisa_kapasitas >= $jml_kembali) {
+                            break;
+                        }
+                    }
+                } else {
+                    $stok = $barang->stok()->first();
+                }
+                $stok->ketersediaan += $jml_kembali;
+                $stok->save();
+            }
+            $bp->status_id = $value;
+            $bp->save();
+            return 1;
         }
     }
 }

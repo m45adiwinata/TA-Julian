@@ -84,6 +84,7 @@ class StokBarangController extends AdminController
         $form->select('sub_lokasi_id', __('Sub lokasi id'))->options(
             SubLokasi::get()->pluck('nama', 'id')
         );
+        $form->number('ketersediaan', 'Jumlah');
 
         return $form;
     }

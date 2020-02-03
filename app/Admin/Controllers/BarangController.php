@@ -27,6 +27,10 @@ class BarangController extends AdminController
     {
         $grid = new Grid(new Barang());
 
+        $grid->filter(function($filter){
+            $filter->disableIdFilter();
+            $filter->like('nama', 'Nama');
+        });
         $grid->column('id', __('Id'));
         $grid->column('nama', __('Nama'));
         $grid->column('harga', __('Harga Beli'));

@@ -255,8 +255,8 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                                     else {
                                                         $temp -= $penjualan->diskon;
                                                     }
+                                                    echo number_format($temp, 2, ',', '.');
                                                     @endphp
-                                                    {{number_format($temp, 2, ',', '.')}}
                                                 </td>
                                                 <td>
                                                     <ul class="d-flex justify-content-center">
@@ -353,21 +353,40 @@ body {font-family: Arial, Helvetica, sans-serif;}
         }
         $('#modal-yes').click(function() {
             $.get('/penjualan/set-status-barang-penjualan/'+idPenj+'/'+idBar+'/'+$('#status-'+idBar).val(), function(data) {
-                console.log('success');
-                $.each(dataPenjualan, function(key, value) {
-                    if(value.id == idPenj) {
-                        data = value;
-                        return false;
-                    }
-                    $.each(data.barangs, function(key, val) {
-                        if(val.id == idBar) {
-                            val.status_id = $('#status-'+idBar).val();
+                if (data == 1) {
+                    $.each(dataPenjualan, function(key, value) {
+                        if(value.id == idPenj) {
+                            data = value;
+                            return false;
+                        }
+                        $.each(data.barangs, function(key, val) {
+                            if(val.id == idBar) {
+                                val.status_id = $('#status-'+idBar).val();
+                                return false;
+                            }
+                        });
+                    });
+                    $('#myModal').css('display', 'none');
+                    $('#modal-barang').css('display', 'block');
+                }
+                else {
+                    alert("Error: Stok barang tidak cukup.");
+                    var data;
+                    $.each(dataPenjualan, function(key, value) {
+                        if(idPenj == value.id) {
+                            data = value;
                             return false;
                         }
                     });
-                });
-                $('#myModal').css('display', 'none');
-                $('#modal-barang').css('display', 'block');
+                    var temp;
+                    $.each(data.barangs, function(key, value) {
+                        if (value.barang_id == idBar) {
+                            temp = value;
+                            return false;
+                        }
+                    });
+                    $('#status-'+idBar).val(temp.status_id);
+                }
             });
         });
         $('#modal-no').click(function() {
@@ -385,7 +404,6 @@ body {font-family: Arial, Helvetica, sans-serif;}
                 return false;
             }
         });
-        console.log(data.barangs);
         $.each(data.barangs, function(key, value) {
             $('#table-barang').append(
                 '<tr>'+
@@ -419,7 +437,6 @@ body {font-family: Arial, Helvetica, sans-serif;}
         }
     }
     function changeStatus(id) {
-        console.log('hello '+id);
         idBar = id;
         $('#modal-barang').css('display', 'none');
         $('#myModal').attr({'style': 'display: block'});
