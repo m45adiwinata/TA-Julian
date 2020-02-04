@@ -230,6 +230,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                         <thead class="text-uppercase">
                                             <tr>
                                                 <th scope="col">ID</th>
+                                                <th scope="col">Tanggal</th>
                                                 <th scope="col">Pelanggan</th>
                                                 <th scope="col">Sales</th>
                                                 <th scope="col">Barang</th>
@@ -238,9 +239,10 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($penjualans as $key => $penjualan)\
+                                            @foreach($penjualans as $key => $penjualan)
                                             <tr>
                                                 <td>{{$key+1}}</td>
+                                                <td>{{date('d-m-Y', strtotime($penjualan->created_at))}}</td>
                                                 <td>{{$penjualan->pelanggan()->first()->nama}}</td>
                                                 <td>{{$penjualan->sales()->first()->nama}}</td>
                                                 <td><span id="lihat" class="status-p bg-primary" onclick="lihatBarang({{$penjualan->id}})">Lihat Barang</span></td>
