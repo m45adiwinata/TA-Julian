@@ -27,3 +27,8 @@ Route::get('/penjualan/get-sales/{id}', 'PenjualanController@getSalesDetail');
 Route::get('/penjualan/set-status-barang-penjualan/{id}/{barang_id}/{value}', 'PenjualanController@setStatusBarangPenjualan');
 
 Route::resource('stok-barang', StokBarangController::class);
+Route::resource('/eoq', EoqController::class);
+Route::get('/eoq/get-data-penjualan/{tanggal1}/{tanggal2}', 'EoqController@getData');
+
+Route::get('/history-pembelian', 'HistPembelianController@index');
+Route::get('/history-pembelian/get-data/{tgl1}/{tgl2}', 'HistPembelianController@getData');
