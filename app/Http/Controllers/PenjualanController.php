@@ -77,6 +77,7 @@ class PenjualanController extends Controller
         ]);
         // dd($request);
         $data = new Penjualan;
+        $data->created_at = $request->created_at;
         $data->pelanggan_id = $request->pelanggan_id;
         $data->sales_id = $request->sales_id;
         $data->diskon = $request->diskon;
