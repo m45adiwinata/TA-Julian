@@ -285,7 +285,6 @@ class PenjualanController extends Controller
                     }
                     $bp->status_id = $value;
                     $bp->save();
-                    echo("masook");
                     return 1;
                 } else {
                     return "gagal, tidak ada stok";
