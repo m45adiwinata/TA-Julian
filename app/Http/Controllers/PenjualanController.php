@@ -234,7 +234,7 @@ class PenjualanController extends Controller
         $barang = $bp->barang()->first();
         if ($value == 2) {
             if ($bp->status_id != 2) {
-                $jumlah = $bp->harga_jual / $barang->harga_jual;
+                $jumlah = intval($bp->harga_jual / $barang->harga_jual);
                 $jml_tersedia = 0;
                 foreach ($barang->stok()->get() as $key => $stok) {
                     $jml_tersedia += $stok->ketersediaan;
@@ -268,7 +268,6 @@ class PenjualanController extends Controller
                                 if ($stok_parent->ketersediaan >= $jml_dibutuhkan) {
                                     $stok_parent->ketersediaan -= $jml_dibutuhkan;
                                     $stok_parent->save();
-                                    dd($stok_barang);
                                     $stok_barang->ketersediaan += $parent_barang->jumlah_unit * $jml_dibutuhkan - $jumlah;
                                     $stok_barang->save();
                                     $jml_dibutuhkan = 0;
@@ -286,6 +285,7 @@ class PenjualanController extends Controller
                     }
                     $bp->status_id = $value;
                     $bp->save();
+                    echo("masook");
                     return 1;
                 } else {
                     return "gagal, tidak ada stok";
