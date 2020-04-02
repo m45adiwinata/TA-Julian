@@ -80,11 +80,36 @@ class HomeController extends Controller
                 }
             }
         }
-        $pelanggans = usort($pelanggans, function($a, $b) {
-            return strcmp($a->total_beli, $b->total_beli);
-        });
-        dd($pelanggans[0]);
+        for ($i=0; $i < count($pelanggans); $i++) { 
+            for ($j=$i+1; $j < count($pelanggans); $j++) { 
+                if ($pelanggans[$j]->total_beli > $pelanggans[$i]->total_beli) {
+                    $temp = $pelanggans[$i];
+                    $pelanggans[$i] = $pelanggans[$j];
+                    $pelanggans[$j] = $temp;
+                }
+            }
+        }
+        $pelanggans = $pelanggans->take(10);
+        foreach ($pelanggans as $key => $pelanggan) {
+            $total_belanja_perhari = array();
+            $period = new DatePeriod(
+                new DateTime($pelanggan->penjualan()->first()->created_at),
+                new DateInterval('P1D'),
+                new DateTime($pelanggan->penjualan()->orderBy('created_at', 'desc')->first()->created_at)
+            );
+            foreach ($period as $key => $p) {
+                $total = 0;
+                foreach ($pelanggan->penjualan()->whereDate('created_at', $p)->get() as $key => $penjualan) {
+                    foreach ($penjualan->barangPenjualan()->get() as $key => $bp) {
+                        $total += intval($bp->harga_jual);
+                    }
+                }
+                array_push($total_belanja_perhari, $total);
+            }
+            $pelanggan->total_belanja_perhari = $total_belanja_perhari;
+        }
         $data['sales'] = $sales;
+        $data['pelanggans'] = $pelanggans;
 
         return view('home', $data);
     }

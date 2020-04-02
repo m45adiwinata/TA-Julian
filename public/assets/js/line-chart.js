@@ -172,54 +172,6 @@ if ($('#coin_sales3').length) {
 
 /*--------------  market status chart start ------------*/
 
-if ($('#mvaluechart').length) {
-    var ctx = document.getElementById('mvaluechart').getContext('2d');
-    var myLineChart = new Chart(ctx, {
-        // The type of chart we want to create
-        type: 'line',
-        // The data for our dataset
-        data: {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
-            datasets: [{
-                label: "Market Value",
-                backgroundColor: 'transparent',
-                borderColor: '#6e00ff',
-                borderWidth: 2,
-                data: [0, 15, 30, 10, 25, 0, 30],
-                pointBorderColor: "transparent",
-                pointBorderWidth: 10
-            }]
-        },
-
-        // Configuration options go here
-        options: {
-            legend: {
-                display: false
-            },
-            tooltips: {
-                callbacks: {
-                    label: function(tooltipItem) {
-                        return tooltipItem.yLabel;
-                    }
-                }
-            },
-            elements: {
-                line: {
-                    tension: 0, // disables bezier curves
-                }
-            },
-            scales: {
-                yAxes: [{
-                    display: !1
-                }],
-                xAxes: [{
-                    display: !1
-                }]
-            }
-        }
-    });
-}
-
 if ($('#mvaluechart2').length) {
     var ctx = document.getElementById('mvaluechart2').getContext('2d');
     var myLineChart = new Chart(ctx, {
