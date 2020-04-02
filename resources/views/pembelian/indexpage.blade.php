@@ -134,25 +134,53 @@ body {font-family: Arial, Helvetica, sans-serif;}
                             </div>
                             <nav aria-label="Page navigation example" class="float-right">
                                 <ul class="pagination">
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#" aria-label="Previous">
+                                    <li class="page-item{{ $c_page == 1 ? ' disabled': ''}}">
+                                        <a class="page-link" href="/pembelian/index/1" aria-label="Previous">
                                             <span aria-hidden="true">&laquo;</span>
                                             <span class="sr-only">Previous</span>
                                         </a>
                                     </li>
+                                    @if($c_page > 2 && $c_page < $l_page)
+                                    <li class="page-item"><a class="page-link" href="/pembelian/index/<?php echo($c_page - 1); ?>"><?php echo($c_page - 1); ?></a></li>
+                                    @elseif($c_page == 2)
+                                    <li class="page-item"><a class="page-link" href="/pembelian/index/<?php echo($c_page - 1); ?>"><?php echo($c_page - 1); ?></a></li>
+                                    @elseif($c_page == $l_page)
+                                    <li class="page-item"><a class="page-link" href="/pembelian/index/<?php echo($c_page - 2); ?>"><?php echo($c_page - 2); ?></a></li>
+                                    <li class="page-item"><a class="page-link" href="/pembelian/index/<?php echo($c_page - 1); ?>"><?php echo($c_page - 1); ?></a></li>
+                                    @else
                                     <li class="page-item active"><a class="page-link" href="/pembelian/index/1">1</a></li>
+                                    @endif
                                     @php
-                                    if($l_page > 2) {
-                                        for($i=2; $i<4; $i++) {
+                                    if($c_page == 1) {
+                                        if($l_page > 2) {
+                                            for($i=$c_page+1; $i<$c_page+3; $i++) {
+                                                $page_number = $i;
+                                                echo('<li class="page-item"><a class="page-link" href="/pembelian/index/'.$page_number.'">'.$page_number.'</a></li>');
+                                            }
+                                        }
+                                        else {
+                                            echo('<li class="page-item"><a class="page-link" href="/pembelian/index/2">2</a></li>');
+                                        }
+                                    }
+                                    else if ($c_page < $l_page) {
+                                        for($i=$c_page; $i<$c_page+2; $i++) {
                                             $page_number = $i;
-                                            echo('<li class="page-item"><a class="page-link" href="/pembelian/index/'.$page_number.'">'.$page_number.'</a></li>');
+                                            if($c_page == $page_number) {
+                                                echo('<li class="page-item active"><a class="page-link" href="/pembelian/index/'.$page_number.'">'.$page_number.'</a></li>');
+                                            }
+                                            else {
+                                                echo('<li class="page-item"><a class="page-link" href="/pembelian/index/'.$page_number.'">'.$page_number.'</a></li>');
+                                            }
                                         }
                                     }
                                     else {
-                                        echo('<li class="page-item"><a class="page-link" href="/pembelian/index/2">2</a></li>');
+                                        for($i=$c_page; $i<$c_page+1; $i++) {
+                                            $page_number = $i;
+                                            echo('<li class="page-item active"><a class="page-link" href="/pembelian/index/'.$page_number.'">'.$page_number.'</a></li>');
+                                        }
                                     }
                                     @endphp
-                                    <li class="page-item">
+                                    <li class="page-item{{ $c_page == $l_page ? ' disabled' : '' }}">
                                         <a class="page-link" href="/pembelian/index/{{$l_page}}" aria-label="Next">
                                             <span aria-hidden="true">&raquo;</span>
                                             <span class="sr-only">Next</span>

@@ -21,7 +21,17 @@ class PembelianController extends Controller
      */
     public function index()
     {
-        $data['pembelians'] = Pembelian::get();
+        // $pembelians = Pembelian::get();
+        // foreach ($pembelians as $key => $pembelian) {
+        //     $temp = date('Y-m-d', strtotime($pembelian->created_at));
+        //     $random = random_int(9, 18);
+        //     if ($random < 10) {
+        //         $random = "0".$random;
+        //     }
+        //     $pembelian->created_at = $temp." ".$random.":00:00";
+        //     $pembelian->save();
+        // }
+        $data['pembelians'] = Pembelian::take(10)->get();
         foreach ($data['pembelians'] as $key => $pembelian) {
             $pembelian->status = Status::find($pembelian->status_id)->nama;
             $pembelian->barangs = $pembelian->barangPembelian()->get();
@@ -37,8 +47,33 @@ class PembelianController extends Controller
         $data['title'] = 'Pembelian';
         $data['sub_title'] = 'Data';
         $data['sub_link'] = '/pembelian';
+        $data['l_page'] = intval(count(Pembelian::get()) / 10) + 1;
 
         return view('pembelian.index', $data);
+    }
+
+    public function indexPage($page)
+    {
+        $skip = $page * 10 - 10;
+        $data['pembelians'] = Pembelian::skip($skip)->take(10)->get();
+        foreach ($data['pembelians'] as $key => $pembelian) {
+            $pembelian->barangs = $pembelian->barangPembelian()->get();
+            foreach ($pembelian->barangs as $key => $barang) {
+                $temp = $barang->barang()->first();
+                $barang->nama = $temp->nama;
+                $barang->harga = $temp->harga;
+                $barang->qty = $barang->harga_beli / $temp->harga;
+            }
+        }
+        $data['statuses'] = Status::get();
+        $data['page'] = 'data_pembelian';
+        $data['title'] = 'Pembelian';
+        $data['sub_title'] = 'Data';
+        $data['sub_link'] = '/pembelian';
+        $data['c_page'] = $page;
+        $data['l_page'] = intval(count(Pembelian::get()) / 10) + 1;
+
+        return view('pembelian.indexpage', $data);
     }
 
     /**

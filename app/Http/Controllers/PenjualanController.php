@@ -20,7 +20,17 @@ class PenjualanController extends Controller
      */
     public function index()
     {
-        $data['penjualans'] = Penjualan::get();
+        // $penjualans = Penjualan::get();
+        // foreach ($penjualans as $key => $penjualan) {
+        //     $temp = date('Y-m-d', strtotime($penjualan->created_at));
+        //     $random = random_int(9, 18);
+        //     if ($random < 10) {
+        //         $random = "0".$random;
+        //     }
+        //     $penjualan->created_at = $temp." ".$random.":00:00";
+        //     $penjualan->save();
+        // }
+        $data['penjualans'] = Penjualan::take(10)->get();
         foreach ($data['penjualans'] as $key => $penjualan) {
             $penjualan->barangs = $penjualan->barangPenjualan()->get();
             foreach ($penjualan->barangs as $key => $barang) {
@@ -35,8 +45,33 @@ class PenjualanController extends Controller
         $data['title'] = 'Penjualan';
         $data['sub_title'] = 'Data';
         $data['sub_link'] = '/penjualan';
+        $data['l_page'] = intval(count(Penjualan::get()) / 10) + 1;
 
         return view('penjualan.index', $data);
+    }
+
+    public function indexPage($page)
+    {
+        $skip = $page * 10 - 10;
+        $data['penjualans'] = Penjualan::skip($skip)->take(10)->get();
+        foreach ($data['penjualans'] as $key => $penjualan) {
+            $penjualan->barangs = $penjualan->barangPenjualan()->get();
+            foreach ($penjualan->barangs as $key => $barang) {
+                $temp = $barang->barang()->first();
+                $barang->nama = $temp->nama;
+                $barang->harga = $temp->harga_jual;
+                $barang->qty = $barang->harga_jual / $temp->harga_jual;
+            }
+        }
+        $data['statuses'] = Status::get();
+        $data['page'] = 'data_penjualan';
+        $data['title'] = 'Penjualan';
+        $data['sub_title'] = 'Data';
+        $data['sub_link'] = '/penjualan';
+        $data['c_page'] = $page;
+        $data['l_page'] = intval(count(Penjualan::get()) / 10) + 1;
+
+        return view('penjualan.indexpage', $data);
     }
 
     /**
@@ -77,7 +112,7 @@ class PenjualanController extends Controller
         ]);
         // dd($request);
         $data = new Penjualan;
-        $data->created_at = $request->created_at;
+        $data->created_at = $request->created_at." ".date('h:i:s');
         $data->pelanggan_id = $request->pelanggan_id;
         $data->sales_id = $request->sales_id;
         $data->diskon = $request->diskon;

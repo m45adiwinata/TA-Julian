@@ -14,18 +14,23 @@
 Route::get('/login', 'UserLogController@index');
 Route::post('/login', 'UserLogController@login');
 Route::get('/', 'HomeController@index');
+Route::get('/get-penjualan-pembelian/{start}/{end}', 'HomeController@getPenjualanPembelianNHari');
+Route::get('/get-penjualan-pembelian/{date}', 'HomeController@getPenjualanPembelian1Hari');
+Route::get('/get-penjualan-pembelian', 'HomeController@getPenjualanPembelianLifetime');
 
 Route::resource('/pembelian', PembelianController::class);
 Route::get('/pembelian/get-suplier/{id}', 'PembelianController@getSuplierDetail');
 Route::get('/pembelian/get-barang/{id}', 'PembelianController@getBarangDetail');
 Route::get('/pembelian/set-status/{id}/{status}', 'PembelianController@setStatus');
 Route::get('/pembelian/cek-kapasitas-gudang/{id}', 'PembelianController@getKapasitasSubLokasi');
+Route::get('/pembelian/index/{page}', 'PembelianController@indexPage');
 
 Route::resource('/penjualan', PenjualanController::class);
 Route::get('/penjualan/get-pelanggan/{id}', 'PenjualanController@getPelangganDetail');
 Route::get('/penjualan/get-sales/{id}', 'PenjualanController@getSalesDetail');
 Route::get('/penjualan/set-status-barang-penjualan/{id}/{barang_id}/{value}', 'PenjualanController@setStatusBarangPenjualan');
 Route::get('/penjualan/lihat-barang/{id}', 'PenjualanController@lihatBarang');
+Route::get('/penjualan/index/{page}', 'PenjualanController@indexPage');
 
 Route::resource('stok-barang', StokBarangController::class);
 Route::resource('/eoq', EoqController::class);

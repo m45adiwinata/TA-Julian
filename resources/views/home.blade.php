@@ -6,173 +6,7 @@
     @include('sidebar')
     <!-- main content area start -->
     <div class="main-content">
-        <!-- header area start -->
-        <div class="header-area">
-            <div class="row align-items-center">
-                <!-- nav and search button -->
-                <div class="col-md-6 col-sm-8 clearfix">
-                    <div class="nav-btn pull-left">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                    <div class="search-box pull-left">
-                        <form action="#">
-                            <input type="text" name="search" placeholder="Search..." required>
-                            <i class="ti-search"></i>
-                        </form>
-                    </div>
-                </div>
-                <!-- profile info & task notification -->
-                <div class="col-md-6 col-sm-4 clearfix">
-                    <ul class="notification-area pull-right">
-                        <li id="full-view"><i class="ti-fullscreen"></i></li>
-                        <li id="full-view-exit"><i class="ti-zoom-out"></i></li>
-                        <li class="dropdown">
-                            <i class="ti-bell dropdown-toggle" data-toggle="dropdown">
-                                <span>2</span>
-                            </i>
-                            <div class="dropdown-menu bell-notify-box notify-box">
-                                <span class="notify-title">You have 3 new notifications <a href="#">view all</a></span>
-                                <div class="nofity-list">
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb"><i class="ti-key btn-danger"></i></div>
-                                        <div class="notify-text">
-                                            <p>You have Changed Your Password</p>
-                                            <span>Just Now</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb"><i class="ti-comments-smiley btn-info"></i></div>
-                                        <div class="notify-text">
-                                            <p>New Commetns On Post</p>
-                                            <span>30 Seconds ago</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb"><i class="ti-key btn-primary"></i></div>
-                                        <div class="notify-text">
-                                            <p>Some special like you</p>
-                                            <span>Just Now</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb"><i class="ti-comments-smiley btn-info"></i></div>
-                                        <div class="notify-text">
-                                            <p>New Commetns On Post</p>
-                                            <span>30 Seconds ago</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb"><i class="ti-key btn-primary"></i></div>
-                                        <div class="notify-text">
-                                            <p>Some special like you</p>
-                                            <span>Just Now</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb"><i class="ti-key btn-danger"></i></div>
-                                        <div class="notify-text">
-                                            <p>You have Changed Your Password</p>
-                                            <span>Just Now</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb"><i class="ti-key btn-danger"></i></div>
-                                        <div class="notify-text">
-                                            <p>You have Changed Your Password</p>
-                                            <span>Just Now</span>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="dropdown">
-                            <i class="fa fa-envelope-o dropdown-toggle" data-toggle="dropdown"><span>3</span></i>
-                            <div class="dropdown-menu notify-box nt-enveloper-box">
-                                <span class="notify-title">You have 3 new notifications <a href="#">view all</a></span>
-                                <div class="nofity-list">
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb">
-                                            <img src="assets/images/author/author-img1.jpg" alt="image">
-                                        </div>
-                                        <div class="notify-text">
-                                            <p>Aglae Mayer</p>
-                                            <span class="msg">Hey I am waiting for you...</span>
-                                            <span>3:15 PM</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb">
-                                            <img src="assets/images/author/author-img2.jpg" alt="image">
-                                        </div>
-                                        <div class="notify-text">
-                                            <p>Aglae Mayer</p>
-                                            <span class="msg">When you can connect with me...</span>
-                                            <span>3:15 PM</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb">
-                                            <img src="assets/images/author/author-img3.jpg" alt="image">
-                                        </div>
-                                        <div class="notify-text">
-                                            <p>Aglae Mayer</p>
-                                            <span class="msg">I missed you so much...</span>
-                                            <span>3:15 PM</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb">
-                                            <img src="assets/images/author/author-img4.jpg" alt="image">
-                                        </div>
-                                        <div class="notify-text">
-                                            <p>Aglae Mayer</p>
-                                            <span class="msg">Your product is completely Ready...</span>
-                                            <span>3:15 PM</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb">
-                                            <img src="assets/images/author/author-img2.jpg" alt="image">
-                                        </div>
-                                        <div class="notify-text">
-                                            <p>Aglae Mayer</p>
-                                            <span class="msg">Hey I am waiting for you...</span>
-                                            <span>3:15 PM</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb">
-                                            <img src="assets/images/author/author-img1.jpg" alt="image">
-                                        </div>
-                                        <div class="notify-text">
-                                            <p>Aglae Mayer</p>
-                                            <span class="msg">Hey I am waiting for you...</span>
-                                            <span>3:15 PM</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb">
-                                            <img src="assets/images/author/author-img3.jpg" alt="image">
-                                        </div>
-                                        <div class="notify-text">
-                                            <p>Aglae Mayer</p>
-                                            <span class="msg">Hey I am waiting for you...</span>
-                                            <span>3:15 PM</span>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="settings-btn">
-                            <i class="ti-settings"></i>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <!-- header area end -->
+        @include('headerarea')
         @include('titlebar')
         <div class="main-content-inner">
             <!-- sales report area start -->
@@ -236,9 +70,19 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h4 class="header-title mb-0">Penjualan dan Pembelian</h4>
-                                <select class="custome-select border-0 pr-3">
-                                    <option selected>Last 24 Hours</option>
-                                    <option value="0">01 July 2018</option>
+                                <div>
+                                    <label for="date_start-0">From: </label>
+                                    <input type="date" name="date_start" id="date_start-0">
+                                    <label for="date_end-0">To: </label>
+                                    <input type="date" name="date_end" id="date_end-0">
+                                    <button id="procceed-0">Procceed</button>
+                                </div>
+                                <select class="custome-select border-0 pr-3" id="timerange-0">
+                                    <option selected value="0">Last 24 Hours</option>
+                                    <option value="1">Last Week</option>
+                                    <option value="2">Last Month</option>
+                                    <option value="3">Last Year</option>
+                                    <option value="4">Life Time</option>
                                 </select>
                             </div>
                             <div id="verview-shart"></div>
@@ -466,65 +310,6 @@
                 <!-- trading history area end -->
             </div>
             <!-- row area end -->
-            <div class="row mt-5">
-                <!-- latest news area start -->
-                <div class="col-xl-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="header-title">Latest News</h4>
-                            <div class="letest-news mt-5">
-                                <div class="single-post mb-xs-40 mb-sm-40">
-                                    <div class="lts-thumb">
-                                        <img src="assets/images/blog/post-thumb1.jpg" alt="post thumb">
-                                    </div>
-                                    <div class="lts-content">
-                                        <span>Admin Post</span>
-                                        <h2><a href="blog.html">Sed ut perspiciatis unde omnis iste.</a></h2>
-                                        <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some...</p>
-                                    </div>
-                                </div>
-                                <div class="single-post">
-                                    <div class="lts-thumb">
-                                        <img src="assets/images/blog/post-thumb2.jpg" alt="post thumb">
-                                    </div>
-                                    <div class="lts-content">
-                                        <span>Admin Post</span>
-                                        <h2><a href="blog.html">Sed ut perspiciatis unde omnis iste.</a></h2>
-                                        <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some...</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- latest news area end -->
-                <!-- exchange area start -->
-                <div class="col-xl-6 mt-md-30 mt-xs-30 mt-sm-30">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="header-title">Exchange</h4>
-                            <div class="exhcange-rate mt-5">
-                                <form action="#">
-                                    <div class="input-form">
-                                        <input type="text" value="0.76834">
-                                        <span>BTC</span>
-                                    </div>
-                                    <div class="exchange-devider">To</div>
-                                    <div class="input-form">
-                                        <input type="text" value="5689.846">
-                                        <span>USD</span>
-                                    </div>
-                                    <div class="exchange-btn">
-                                        <button type="submit">Exchange Now</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- exchange area end -->
-            </div>
-            <!-- row area start-->
         </div>
     </div>
     <!-- main content area end -->
@@ -714,4 +499,377 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('script')
+<script>
+    $(document).ready(function() {
+        /*--------------  overview-chart start ------------*/
+        if ($('#verview-shart').length) {
+            var myConfig = {
+                "type": "line",
+
+                "scale-x": { //X-Axis
+                    "labels": <?php echo(json_encode($labels)); ?>,
+                    "label": {
+                        "font-size": 14,
+                        "offset-x": 0,
+                    },
+                    "item": { //Scale Items (scale values or labels)
+                        "font-size": 10,
+                    },
+                    "guide": { //Guides
+                        "visible": false,
+                        "line-style": "solid", //"solid", "dotted", "dashed", "dashdot"
+                        "alpha": 1
+                    }
+                },
+                'scale-y': {
+                    short: true
+                },
+                "plot": { 
+                    "aspect": "spline", 
+                    "tooltip": {
+                        "text": "Rp %v",
+                        "shadow": false,
+                        "border-radius": 2,
+                        'thousands-separator': "."
+                    }
+                },
+                "legend": {
+                    "background-color": "none",
+                    "border-width": 0,
+                    "shadow": false,
+                    "layout": "float",
+                    "marker": {
+                        "border-radius": 3,
+                        "border-width": 0
+                    },
+                    "item": {
+                        "color": "%backgroundcolor"
+                    }
+                },
+                "series": [{
+                        "text": "Penjualan",
+                        "values": <?php echo(json_encode($jml_penjualan)); ?>,
+                        "line-color": "#F0B41A",
+                        /* "dotted" | "dashed" */
+                        "line-width": 2 /* in pixels */ ,
+                        "marker": { /* Marker object */
+                            "background-color": "#D79D3B",
+                            /* hexadecimal or RGB value */
+                            "size": 3,
+                            /* in pixels */
+                            "border-color": "#D79D3B",
+                            /* hexadecimal or RBG value */
+                        }
+                    },
+                    {
+                        "text": "Pembelian",
+                        "values": <?php echo(json_encode($jml_pembelian)); ?>,
+                        "line-color": "#0884D9",
+                        /* "dotted" | "dashed" */
+                        "line-width": 2 /* in pixels */ ,
+                        "marker": { /* Marker object */
+                            "background-color": "#067dce",
+                            /* hexadecimal or RGB value */
+                            "size": 3,
+                            /* in pixels */
+                            "border-color": "#067dce",
+                            /* hexadecimal or RBG value */
+                        }
+                    }
+                ]
+            };
+
+            zingchart.render({
+                id: 'verview-shart',
+                data: myConfig,
+                height: "100%",
+                width: "100%"
+            });
+        }
+        /*--------------  overview-chart END ------------*/
+        /*--------------  coin distrubution chart START ------------*/
+        if ($('#coin_distribution').length) {
+        zingchart.THEME = "classic";
+        var myConfig = {
+            "globals": {
+                "font-family": "Roboto"
+            },
+            "graphset": [{
+                    "type": "pie",
+                    "background-color": "#fff",
+                    "legend": {
+                        "background-color": "none",
+                        "border-width": 0,
+                        "shadow": false,
+                        "layout": "float",
+                        "margin": "auto auto 16% auto",
+                        "marker": {
+                            "border-radius": 3,
+                            "border-width": 0
+                        },
+                        "item": {
+                            "color": "%backgroundcolor"
+                        }
+                    },
+                    "plotarea": {
+                        "background-color": "#FFFFFF",
+                        "border-color": "#DFE1E3",
+                        "margin": "25% 8%"
+                    },
+                    "labels": [{
+                        "x": "45%",
+                        "y": "47%",
+                        "width": "10%",
+                        "text": "340 Coin",
+                        "font-size": 17,
+                        "font-weight": 700
+                    }],
+                    "plot": {
+                        "size": 70,
+                        "slice": 90,
+                        "margin-right": 0,
+                        "border-width": 0,
+                        "shadow": 0,
+                        "value-box": {
+                            "visible": true
+                        },
+                        "tooltip": {
+                            "text": "Rp %v",
+                            "shadow": false,
+                            "border-radius": 2,
+                            'thousands-separator': "."
+                        }
+                    },
+                    "series": [{
+                            "values": [<?php echo($sales[0]->jml_penjualan); ?>],
+                            "text": "<?php echo($sales[0]->nama); ?>",
+                            "background-color": "#4cff63"
+                        },
+                        {
+                            "values": [<?php echo($sales[1]->jml_penjualan); ?>],
+                            "text": "<?php echo($sales[1]->nama); ?>",
+                            "background-color": "#fd9c21"
+                        },
+                        {
+                            "values": [<?php echo($sales[2]->jml_penjualan); ?>],
+                            "text": "<?php echo($sales[2]->nama); ?>",
+                            "background-color": "#2c13f8"
+                        }
+                    ]
+                }
+
+            ]
+        };
+
+        zingchart.render({
+            id: 'coin_distribution',
+            data: myConfig,
+        });
+        }
+        /*--------------  coin distrubution chart END ------------*/
+        
+        $('#timerange-0').change(function() {
+            if($(this).val() == 0) {
+                var date = new Date();
+                let endDate = date.getDate();
+                if (endDate < 10) {
+                    endDate = '0' + endDate;
+                }
+                let endMonth = date.getMonth();
+                if (endMonth < 10) {
+                    endMonth = '0' + endMonth;
+                }
+                let end = date.getFullYear() + '-' + endMonth + '-' + endDate;
+                $.get('/get-penjualan-pembelian/'+end, function(data) {
+                    renderGrafikPenjualanPembelian(data.jml_penjualan, data.jml_pembelian, data.labels);
+                });
+            }
+            else if($(this).val() == 1) {
+                var date = new Date();
+                let endDate = date.getDate();
+                if (endDate < 10) {
+                    endDate = '0' + endDate;
+                }
+                let endMonth = date.getMonth();
+                if (endMonth < 10) {
+                    endMonth = '0' + endMonth;
+                }
+                let end = date.getFullYear() + '-' + endMonth + '-' + endDate;
+                var last = new Date(date.getTime() - (7 * 24 * 60 * 60 * 1000));
+                var day = last.getDate();
+                var month = last.getMonth()+1;
+                var year = last.getFullYear();
+                let lastMonth = last.getMonth();
+                if (lastMonth < 10) {
+                    lastMonth = '0' + lastMonth;
+                }
+                let lastDate = last.getDate();
+                if (lastDate < 10) {
+                    lastDate = '0' + lastDate;
+                }
+                let start = last.getFullYear() + '-' + lastMonth + '-' + lastDate;
+                $.get('/get-penjualan-pembelian/'+start+'/'+end, function(data) {
+                    renderGrafikPenjualanPembelian(data.jml_penjualan, data.jml_pembelian, data.labels);
+                });
+            }
+            else if($(this).val() == 2) {
+                var date = new Date();
+                let endDate = date.getDate();
+                if (endDate < 10) {
+                    endDate = '0' + endDate;
+                }
+                let endMonth = date.getMonth();
+                if (endMonth < 10) {
+                    endMonth = '0' + endMonth;
+                }
+                let end = date.getFullYear() + '-' + endMonth + '-' + endDate;
+                var last = new Date(date.getTime() - (30 * 24 * 60 * 60 * 1000));
+                var day = last.getDate();
+                var month = last.getMonth()+1;
+                var year = last.getFullYear();
+                let lastMonth = last.getMonth();
+                if (lastMonth < 10) {
+                    lastMonth = '0' + lastMonth;
+                }
+                let lastDate = last.getDate();
+                if (lastDate < 10) {
+                    lastDate = '0' + lastDate;
+                }
+                let start = last.getFullYear() + '-' + lastMonth + '-' + lastDate;
+                $.get('/get-penjualan-pembelian/'+start+'/'+end, function(data) {
+                    renderGrafikPenjualanPembelian(data.jml_penjualan, data.jml_pembelian, data.labels);
+                });
+            }
+            else if($(this).val() == 3) {
+                var date = new Date();
+                let endDate = date.getDate();
+                if (endDate < 10) {
+                    endDate = '0' + endDate;
+                }
+                let endMonth = date.getMonth();
+                if (endMonth < 10) {
+                    endMonth = '0' + endMonth;
+                }
+                let end = date.getFullYear() + '-' + endMonth + '-' + endDate;
+                var last = new Date(date.getTime() - (365 * 24 * 60 * 60 * 1000));
+                var day = last.getDate();
+                var month = last.getMonth()+1;
+                var year = last.getFullYear();
+                let lastMonth = last.getMonth();
+                if (lastMonth < 10) {
+                    lastMonth = '0' + lastMonth;
+                }
+                let lastDate = last.getDate();
+                if (lastDate < 10) {
+                    lastDate = '0' + lastDate;
+                }
+                let start = last.getFullYear() + '-' + lastMonth + '-' + lastDate;
+                $.get('/get-penjualan-pembelian/'+start+'/'+end, function(data) {
+                    renderGrafikPenjualanPembelian(data.jml_penjualan, data.jml_pembelian, data.labels);
+                });
+            }
+            else if($(this).val() == 4) {
+                $.get('/get-penjualan-pembelian', function(data) {
+                    renderGrafikPenjualanPembelian(data.jml_penjualan, data.jml_pembelian, data.labels);
+                });
+            }
+            
+        });
+        $('#procceed-0').click(function() {
+            if($('#date_start-0').val() && $('#date_end-0').val()) {
+                if($('#date_start-0').val() < $('#date_end-0').val()) {
+                    $.get('/get-penjualan-pembelian/'+$('#date_start-0').val()+'/'+$('#date_end-0').val(), function(data) {
+                        renderGrafikPenjualanPembelian(data.jml_penjualan, data.jml_pembelian, data.labels);
+                    });
+                }
+            }
+        });
+    });
+    function renderGrafikPenjualanPembelian(v0, v1, labels) {
+        var myConfig = {
+            "type": "line",
+            "scale-x": { //X-Axis
+                "labels": labels,
+                "label": {
+                    "font-size": 14,
+                    "offset-x": 1,
+                },
+                "item": { //Scale Items (scale values or labels)
+                    "font-size": 10,
+                },
+                "guide": { //Guides
+                    "visible": false,
+                    "line-style": "solid", //"solid", "dotted", "dashed", "dashdot"
+                    "alpha": 1
+                }
+            },
+            'scale-y': {
+                short: true
+            },
+            "plot": { 
+                "aspect": "spline", 
+                "tooltip": {
+                    "text": "Rp %v",
+                    "shadow": false,
+                    "border-radius": 2,
+                    'thousands-separator': "."
+                }
+            },
+            "legend": {
+                "background-color": "none",
+                "border-width": 0,
+                "shadow": false,
+                "layout": "float",
+                "marker": {
+                    "border-radius": 3,
+                    "border-width": 0
+                },
+                "item": {
+                    "color": "%backgroundcolor"
+                }
+            },
+            "series": [{
+                    "text": "Penjualan",
+                    "values": v0,
+                    "line-color": "#F0B41A",
+                    /* "dotted" | "dashed" */
+                    "line-width": 2 /* in pixels */ ,
+                    "marker": { /* Marker object */
+                        "background-color": "#D79D3B",
+                        /* hexadecimal or RGB value */
+                        "size": 3,
+                        /* in pixels */
+                        "border-color": "#D79D3B",
+                        /* hexadecimal or RBG value */
+                    }
+                },
+                {
+                    "text": "Pembelian",
+                    "values": v1,
+                    "line-color": "#0884D9",
+                    /* "dotted" | "dashed" */
+                    "line-width": 2 /* in pixels */ ,
+                    "marker": { /* Marker object */
+                        "background-color": "#067dce",
+                        /* hexadecimal or RGB value */
+                        "size": 3,
+                        /* in pixels */
+                        "border-color": "#067dce",
+                        /* hexadecimal or RBG value */
+                    }
+                }
+            ]
+        };
+
+        zingchart.render({
+            id: 'verview-shart',
+            data: myConfig,
+            height: "100%",
+            width: "100%"
+        });
+    }
+</script>
 @endsection
