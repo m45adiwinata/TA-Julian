@@ -64,25 +64,17 @@ class HomeController extends Controller
         $data['labels'] = $labels;
         $sales = Sales::get();
         $pelanggans = Pelanggan::get();
-        foreach (Penjualan::get() as $key => $p) {
-            $total = 0;
-            foreach ($p->barangPenjualan()->get() as $key => $bp) {
-                $total += $bp->harga_jual;
-            }
-            foreach ($sales as $key => $s) {
-                if ($p->sales_id == $s->id) {
-                    $s->jml_penjualan +=intval($total);
-                }
-            }
-            foreach ($pelanggans as $key => $pelanggan) {
-                if ($pelanggan->id == $p->pelanggan_id) {
-                    $pelanggan->total_beli += intval($total);
+        foreach ($pelanggans as $key => $pelanggan) {
+            $pelanggan->total_beli = 0;
+            foreach ($pelanggan->penjualan()->get() as $key => $penjualan) {
+                foreach ($penjualan->barangPenjualan()->get() as $key => $bp) {
+                    $pelanggan->total_beli += $bp->harga_jual;
                 }
             }
         }
         for ($i=0; $i < count($pelanggans); $i++) { 
             for ($j=$i+1; $j < count($pelanggans); $j++) { 
-                if ($pelanggans[$j]->total_beli > $pelanggans[$i]->total_beli) {
+                if($pelanggans[$j]->total_beli > $pelanggans[$i]->total_beli) {
                     $temp = $pelanggans[$i];
                     $pelanggans[$i] = $pelanggans[$j];
                     $pelanggans[$j] = $temp;
@@ -92,6 +84,7 @@ class HomeController extends Controller
         $pelanggans = $pelanggans->take(10);
         foreach ($pelanggans as $key => $pelanggan) {
             $total_belanja_perhari = array();
+            $labels = array();
             $period = new DatePeriod(
                 new DateTime($pelanggan->penjualan()->first()->created_at),
                 new DateInterval('P1D'),
@@ -105,8 +98,10 @@ class HomeController extends Controller
                     }
                 }
                 array_push($total_belanja_perhari, $total);
+                array_push($labels, $p->format('Y-m-d'));
             }
             $pelanggan->total_belanja_perhari = $total_belanja_perhari;
+            $pelanggan->label_perhari = $labels;
         }
         $data['sales'] = $sales;
         $data['pelanggans'] = $pelanggans;

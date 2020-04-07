@@ -9,6 +9,7 @@ use App\Barang;
 use App\BarangPenjualan;
 use App\Status;
 use App\SubLokasi;
+use Auth;
 use Illuminate\Http\Request;
 
 class PenjualanController extends Controller
@@ -18,20 +19,17 @@ class PenjualanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // $penjualans = Penjualan::get();
-        // foreach ($penjualans as $key => $penjualan) {
-        //     $temp = date('Y-m-d', strtotime($penjualan->created_at));
-        //     $random = random_int(9, 18);
-        //     if ($random < 10) {
-        //         $random = "0".$random;
-        //     }
-        //     $penjualan->created_at = $temp." ".$random.":00:00";
-        //     $penjualan->save();
-        // }
-        $data['penjualans'] = Penjualan::take(10)->get();
-        foreach ($data['penjualans'] as $key => $penjualan) {
+        if(!Auth::check()) {
+            return redirect('/login');
+        }
+        if ($request->query('per_page')) {
+            session(['per_page'=> $request->query('per_page')]);
+        }
+        $data['penjualans'] = Penjualan::paginate(session('per_page'));
+        $data['penjualans2'] = Penjualan::get();
+        foreach ($data['penjualans2'] as $key => $penjualan) {
             $penjualan->barangs = $penjualan->barangPenjualan()->get();
             foreach ($penjualan->barangs as $key => $barang) {
                 $temp = $barang->barang()->first();
@@ -50,30 +48,6 @@ class PenjualanController extends Controller
         return view('penjualan.index', $data);
     }
 
-    public function indexPage($page)
-    {
-        $skip = $page * 10 - 10;
-        $data['penjualans'] = Penjualan::skip($skip)->take(10)->get();
-        foreach ($data['penjualans'] as $key => $penjualan) {
-            $penjualan->barangs = $penjualan->barangPenjualan()->get();
-            foreach ($penjualan->barangs as $key => $barang) {
-                $temp = $barang->barang()->first();
-                $barang->nama = $temp->nama;
-                $barang->harga = $temp->harga_jual;
-                $barang->qty = $barang->harga_jual / $temp->harga_jual;
-            }
-        }
-        $data['statuses'] = Status::get();
-        $data['page'] = 'data_penjualan';
-        $data['title'] = 'Penjualan';
-        $data['sub_title'] = 'Data';
-        $data['sub_link'] = '/penjualan';
-        $data['c_page'] = $page;
-        $data['l_page'] = intval(count(Penjualan::get()) / 10) + 1;
-
-        return view('penjualan.indexpage', $data);
-    }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -81,6 +55,9 @@ class PenjualanController extends Controller
      */
     public function create()
     {
+        if(!Auth::check()) {
+            return redirect('/login');
+        }
         $data['page'] = 'buat_penjualan';
         $penjualans = Penjualan::get();
         if (count(Penjualan::get()) == 0) {
@@ -148,6 +125,9 @@ class PenjualanController extends Controller
      */
     public function edit(Penjualan $penjualan)
     {
+        if(!Auth::check()) {
+            return redirect('/login');
+        }
         $data['penjualan'] = $penjualan;
         $data['pelanggans'] = Pelanggan::get();
         $data['saleses'] = Sales::get();

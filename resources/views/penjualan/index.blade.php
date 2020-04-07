@@ -73,9 +73,17 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @php
+                                                if(!session('per_page')) {
+                                                    $per_page = 5;
+                                                }
+                                                else {
+                                                    $per_page = session('per_page');
+                                                }
+                                            @endphp
                                             @foreach($penjualans as $key => $penjualan)
                                             <tr>
-                                                <td>{{$key+1}}</td>
+                                                <td>{{$key + 1}}</td>
                                                 <td>{{date('d-m-Y', strtotime($penjualan->created_at))}}</td>
                                                 <td>{{$penjualan->pelanggan()->first()->nama}}</td>
                                                 <td>{{$penjualan->sales()->first()->nama}}</td>
@@ -105,34 +113,17 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                     </table>
                                 </div>
                             </div>
-                            <nav aria-label="Page navigation example" class="float-right">
-                                <ul class="pagination">
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#" aria-label="Previous">
-                                            <span aria-hidden="true">&laquo;</span>
-                                            <span class="sr-only">Previous</span>
-                                        </a>
-                                    </li>
-                                    <li class="page-item active"><a class="page-link" href="/penjualan/index/1">1</a></li>
-                                    @php
-                                    if($l_page > 2) {
-                                        for($i=2; $i<4; $i++) {
-                                            $page_number = $i;
-                                            echo('<li class="page-item"><a class="page-link" href="/penjualan/index/'.$page_number.'">'.$page_number.'</a></li>');
-                                        }
-                                    }
-                                    else {
-                                        echo('<li class="page-item"><a class="page-link" href="/penjualan/index/2">2</a></li>');
-                                    }
-                                    @endphp
-                                    <li class="page-item">
-                                        <a class="page-link" href="/penjualan/index/{{$l_page}}" aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span>
-                                            <span class="sr-only">Next</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
+                            <div class="row">
+                                <form action="penjualan" method="GET" id="limit" class="form-group" style="margin-right:10px;">
+                                    <select name="per_page" class="custom-select">
+                                        <option value="10"{{$per_page == 10 ? "selected" : ""}}>10</option>
+                                        <option value="25"{{$per_page == 25 ? "selected" : ""}}>25</option>
+                                        <option value="50"{{$per_page == 50 ? "selected" : ""}}>50</option>
+                                        <option value="100"{{$per_page == 100 ? "selected" : ""}}>100</option>
+                                    </select>
+                                </form>
+                                {{$penjualans->links()}}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -199,8 +190,12 @@ body {font-family: Arial, Helvetica, sans-serif;}
 <script type="text/javascript">
     var idPenj;
     var idBar;
-    var dataPenjualan = <?php echo($penjualans) ?>;
+    var dataPenjualan = <?php echo($penjualans2) ?>;
     $(document).ready(function() {
+        $('select[name="per_page"]').change(function(e) {
+            e.preventDefault();
+            $('#limit').submit();
+        });
         $('#close-modal-status')[0].onclick = function() {
             var data;
             $.each(dataPenjualan, function(key, value) {

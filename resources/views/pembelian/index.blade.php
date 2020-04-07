@@ -63,7 +63,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                     <table class="table table-hover progress-table text-center">
                                         <thead class="text-uppercase">
                                             <tr>
-                                                <th scope="col">ID</th>
+                                                <th scope="col">No</th>
                                                 <th scope="col">Tanggal</th>
                                                 <th scope="col">Suplier</th>
                                                 <th scope="col">Total Harga</th>
@@ -74,9 +74,18 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @php
+                                                if(!session('per_page')) {
+                                                    $per_page = 5;
+                                                }
+                                                else {
+                                                    $per_page = session('per_page');
+                                                }
+                                            @endphp
                                             @foreach($pembelians as $key => $pembelian)
                                             <tr>
-                                                <th scope="row">{{$key+1}}</th>
+                                                
+                                                <th scope="row">{{$per_page * ($pembelians->currentPage()-1) + $key+1}}</th>
                                                 <td>{{date('d-m-Y', strtotime($pembelian->created_at))}}</td>
                                                 <td>{{$pembelian->suplier()->first()->nama}}</td>
                                                 <td>
@@ -132,34 +141,17 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                     </table>
                                 </div>
                             </div>
-                            <nav aria-label="Page navigation example" class="float-right">
-                                <ul class="pagination">
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#" aria-label="Previous">
-                                            <span aria-hidden="true">&laquo;</span>
-                                            <span class="sr-only">Previous</span>
-                                        </a>
-                                    </li>
-                                    <li class="page-item active"><a class="page-link" href="/pembelian/index/1">1</a></li>
-                                    @php
-                                    if($l_page > 2) {
-                                        for($i=2; $i<4; $i++) {
-                                            $page_number = $i;
-                                            echo('<li class="page-item"><a class="page-link" href="/pembelian/index/'.$page_number.'">'.$page_number.'</a></li>');
-                                        }
-                                    }
-                                    else {
-                                        echo('<li class="page-item"><a class="page-link" href="/pembelian/index/2">2</a></li>');
-                                    }
-                                    @endphp
-                                    <li class="page-item">
-                                        <a class="page-link" href="/pembelian/index/{{$l_page}}" aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span>
-                                            <span class="sr-only">Next</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
+                            <div class="row">
+                                <form action="pembelian" method="GET" id="limit" class="form-group" style="margin-right:10px;">
+                                    <select name="per_page" class="custom-select">
+                                        <option value="10"{{$per_page == 10 ? "selected" : ""}}>10</option>
+                                        <option value="25"{{$per_page == 25 ? "selected" : ""}}>25</option>
+                                        <option value="50"{{$per_page == 50 ? "selected" : ""}}>50</option>
+                                        <option value="100"{{$per_page == 100 ? "selected" : ""}}>100</option>
+                                    </select>
+                                </form>
+                                {{$pembelians->links()}}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -222,8 +214,12 @@ body {font-family: Arial, Helvetica, sans-serif;}
 @section('script')
 <script>
     var idPemb;
-    var dataPembelian = <?php echo($pembelians) ?>;
+    var dataPembelian = <?php echo($pembelians2) ?>;
     $(document).ready(function() {
+        $('select[name="per_page"]').change(function(e) {
+            e.preventDefault();
+            $('#limit').submit();
+        });
         $('#modal-yes').click(function() {
             var id = idPemb;
             $.get('/pembelian/set-status/' + id + '/' + $('#status-'+id).val(), function(data) {

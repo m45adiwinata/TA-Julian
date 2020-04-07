@@ -113,25 +113,27 @@
                             </div>
                             <div class="market-status-table mt-4">
                                 <div class="table-responsive">
-                                    <table class="dbkit-table">
-                                        <tr class="heading-td">
-                                            <td class="coin-name">Coin Name</td>
-                                            <td class="buy">Buy</td>
-                                            <td class="sell">Sells</td>
-                                            <td class="trends">Trends</td>
-                                            <td class="attachments">Attachments</td>
-                                            <td class="stats-chart">Stats</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="coin-name">Dashcoin</td>
-                                            <td class="buy">30% <img src="assets/images/icon/market-value/triangle-down.png" alt="icon"></td>
-                                            <td class="sell">20% <img src="assets/images/icon/market-value/triangle-up.png" alt="icon"></td>
-                                            <td class="trends"><img src="assets/images/icon/market-value/trends-up-icon.png" alt="icon"></td>
-                                            <td class="attachments">$ 56746,857</td>
-                                            <td class="stats-chart">
-                                                <canvas id="mvaluechart"></canvas>
-                                            </td>
-                                        </tr>
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">No</th>
+                                                <th scope="col">Nama</th>
+                                                <th scope="col">Alamat</th>
+                                                <th scope="col">Total Belanja</th>
+                                                <th scope="col">Stats</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($pelanggans as $key => $pelanggan)
+                                            <tr>
+                                                <th scope="row">{{$key+1}}</th>
+                                                <td>{{$pelanggan->nama}}</td>
+                                                <td>{{$pelanggan->alamat}}</td>
+                                                <td>Rp {{number_format($pelanggan->total_beli, 0, ',', '.')}}</td>
+                                                <td class="stats-chart"><canvas id="mvaluechart-{{$pelanggan->id}}"></canvas></td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -462,53 +464,13 @@
 @section('script')
 <script>
     $(document).ready(function() {
-        if ($('#mvaluechart').length) {
-        var ctx = document.getElementById('mvaluechart').getContext('2d');
-        var myLineChart = new Chart(ctx, {
-            // The type of chart we want to create
-            type: 'line',
-            // The data for our dataset
-            data: {
-                labels: ["January", "February", "March", "April", "May", "June", "July"],
-                datasets: [{
-                    label: "Market Value",
-                    backgroundColor: 'transparent',
-                    borderColor: '#6e00ff',
-                    borderWidth: 2,
-                    data: [0, 15, 30, 10, 25, 0, 30],
-                    pointBorderColor: "transparent",
-                    pointBorderWidth: 10
-                }]
-            },
-
-            // Configuration options go here
-            options: {
-                legend: {
-                    display: false
-                },
-                tooltips: {
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            return tooltipItem.yLabel;
-                        }
-                    }
-                },
-                elements: {
-                    line: {
-                        tension: 0, // disables bezier curves
-                    }
-                },
-                scales: {
-                    yAxes: [{
-                        display: !1
-                    }],
-                    xAxes: [{
-                        display: !1
-                    }]
-                }
+        <?php 
+            foreach ($pelanggans as $key => $pelanggan) {
+                $data = json_encode($pelanggan->total_belanja_perhari);
+                $labels = json_encode($pelanggan->label_perhari);
+                echo("renderGrafikRankPelanggan($pelanggan->id, $data, $labels);");
             }
-        });
-    }
+        ?>
         /*--------------  overview-chart start ------------*/
         if ($('#verview-shart').length) {
             var myConfig = {
@@ -793,6 +755,55 @@
             }
         });
     });
+    function renderGrafikRankPelanggan(grafik_id, data, labels) {
+        if ($('#mvaluechart-'+grafik_id).length) {
+            var ctx = document.getElementById('mvaluechart-'+grafik_id).getContext('2d');
+            var myLineChart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+                // The data for our dataset
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Market Value",
+                        backgroundColor: 'transparent',
+                        borderColor: '#6e00ff',
+                        borderWidth: 2,
+                        data: data,
+                        pointBorderColor: "transparent",
+                        pointBorderWidth: 10
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    legend: {
+                        display: false
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.yLabel;
+                            }
+                        }
+                    },
+                    elements: {
+                        line: {
+                            tension: 0, // disables bezier curves
+                        }
+                    },
+                    scales: {
+                        yAxes: [{
+                            display: !1
+                        }],
+                        xAxes: [{
+                            display: !1
+                        }]
+                    }
+                }
+            });
+        }
+    }
     function renderGrafikPenjualanPembelian(v0, v1, labels) {
         var myConfig = {
             "type": "line",
