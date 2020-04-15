@@ -24,11 +24,22 @@ class PenjualanController extends Controller
         if(!Auth::check()) {
             return redirect('/login');
         }
+        // setcookie("per_page", "", time() - 3600);
         if ($request->query('per_page')) {
-            session(['per_page'=> $request->query('per_page')]);
+            $data['penjualans'] = Penjualan::paginate($request->query('per_page'));
+            setcookie("per_page", $request->query('per_page'));
+            $data['per_page'] = $request->query('per_page');
         }
-        $data['penjualans'] = Penjualan::paginate(session('per_page'));
-        $data['penjualans2'] = Penjualan::get();
+        else if (count($_COOKIE) <= 4) {
+            setcookie("per_page", 10);
+            $data['penjualans'] = Penjualan::paginate(10);
+            $data['per_page'] = 10;
+        }
+        else {
+            $data['penjualans'] = Penjualan::paginate($_COOKIE['per_page']);
+            $data['per_page'] = $_COOKIE['per_page'];
+        }
+        $data['penjualans2'] = $data['penjualans']->items();
         foreach ($data['penjualans2'] as $key => $penjualan) {
             $penjualan->barangs = $penjualan->barangPenjualan()->get();
             foreach ($penjualan->barangs as $key => $barang) {

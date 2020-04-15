@@ -63,6 +63,30 @@ class HomeController extends Controller
         $data['jml_pembelian'] = $jml_pembelian;
         $data['labels'] = $labels;
         $sales = Sales::get();
+        foreach ($sales as $key => $s) {
+            foreach ($s->penjualan()->get() as $key => $p) {
+                $total = 0;
+                foreach ($p->barangPenjualan()->get() as $key => $bp) {
+                    $total += $bp->harga_jual;
+                }
+                if ($p->type_diskon == 0) {
+                    $diskon = $p->diskon;
+                } else {
+                    $diskon = $total * $p->diskon / 100;
+                }
+                $total -= $diskon;
+            }
+            $s->total_jual = $total;
+        }
+        // for ($i=0; $i < count($sales); $i++) { 
+        //     for ($j=$i+1; $j < count($sales); $j++) { 
+        //         if ($sales[$j]->total_jual > $sales[$i]->total_jual) {
+        //             $temp = $sales[$i];
+        //             $sales[$i] = $sales[$j];
+        //             $sales[$j] = $temp;
+        //         }
+        //     }
+        // }
         $pelanggans = Pelanggan::get();
         foreach ($pelanggans as $key => $pelanggan) {
             $pelanggan->total_beli = 0;

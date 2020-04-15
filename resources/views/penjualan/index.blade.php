@@ -63,6 +63,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                     <table class="table table-hover progress-table text-center">
                                         <thead class="text-uppercase">
                                             <tr>
+                                                <th scope="col">No</th>
                                                 <th scope="col">ID</th>
                                                 <th scope="col">Tanggal</th>
                                                 <th scope="col">Pelanggan</th>
@@ -73,17 +74,10 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @php
-                                                if(!session('per_page')) {
-                                                    $per_page = 5;
-                                                }
-                                                else {
-                                                    $per_page = session('per_page');
-                                                }
-                                            @endphp
                                             @foreach($penjualans as $key => $penjualan)
                                             <tr>
-                                                <td>{{$key + 1}}</td>
+                                                <td>{{$per_page * ($penjualans->currentPage()-1) + $key + 1}}</td>
+                                                <td>{{$penjualan->id}}</td>
                                                 <td>{{date('d-m-Y', strtotime($penjualan->created_at))}}</td>
                                                 <td>{{$penjualan->pelanggan()->first()->nama}}</td>
                                                 <td>{{$penjualan->sales()->first()->nama}}</td>
@@ -190,7 +184,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
 <script type="text/javascript">
     var idPenj;
     var idBar;
-    var dataPenjualan = <?php echo($penjualans2) ?>;
+    var dataPenjualan = <?php echo(json_encode($penjualans2)) ?>;
     $(document).ready(function() {
         $('select[name="per_page"]').change(function(e) {
             e.preventDefault();

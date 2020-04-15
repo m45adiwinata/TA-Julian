@@ -10,7 +10,7 @@
         @include('titlebar')
         <div class="main-content-inner">
             <!-- sales report area start -->
-            <div class="sales-report-area mt-5 mb-5">
+            <!-- <div class="sales-report-area mt-5 mb-5">
                 <div class="row">
                     <div class="col-md-4">
                         <div class="single-report mb-xs-30">
@@ -61,7 +61,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- sales report area end -->
             <!-- overview area start -->
             <div class="row">
@@ -92,7 +92,7 @@
                 <div class="col-xl-3 col-lg-4 coin-distribution">
                     <div class="card h-full">
                         <div class="card-body">
-                            <h4 class="header-title mb-0">Penjualan Sales Bulan Ini</h4>
+                            <h4 class="header-title mb-0">Penjualan Sales</h4>
                             <div id="coin_distribution"></div>
                         </div>
                     </div>
@@ -129,7 +129,7 @@
                                                 <th scope="row">{{$key+1}}</th>
                                                 <td>{{$pelanggan->nama}}</td>
                                                 <td>{{$pelanggan->alamat}}</td>
-                                                <td>Rp {{number_format($pelanggan->total_beli, 0, ',', '.')}}</td>
+                                                <td>Rp {{number_format($pelanggan->total_beli, 2, ',', '.')}}</td>
                                                 <td class="stats-chart"><canvas id="mvaluechart-{{$pelanggan->id}}"></canvas></td>
                                             </tr>
                                             @endforeach
@@ -145,7 +145,7 @@
             <!-- row area start -->
             <div class="row">
                 <!-- Live Crypto Price area start -->
-                <div class="col-lg-4">
+                <!-- <div class="col-lg-4">
                     <div class="card">
                         <div class="card-body">
                             <h4 class="header-title">Live Crypto Price</h4>
@@ -169,10 +169,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <!-- Live Crypto Price area end -->
                 <!-- trading history area start -->
-                <div class="col-lg-8 mt-sm-30 mt-xs-30">
+                <!-- <div class="col-lg-8 mt-sm-30 mt-xs-30">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-sm-flex justify-content-between align-items-center">
@@ -266,7 +266,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <!-- trading history area end -->
             </div>
             <!-- row area end -->
@@ -611,17 +611,17 @@
                         }
                     },
                     "series": [{
-                            "values": [<?php echo($sales[0]->jml_penjualan); ?>],
+                            "values": [<?php echo($sales[0]->total_jual); ?>],
                             "text": "<?php echo($sales[0]->nama); ?>",
                             "background-color": "#4cff63"
                         },
                         {
-                            "values": [<?php echo($sales[1]->jml_penjualan); ?>],
+                            "values": [<?php echo($sales[1]->total_jual); ?>],
                             "text": "<?php echo($sales[1]->nama); ?>",
                             "background-color": "#fd9c21"
                         },
                         {
-                            "values": [<?php echo($sales[2]->jml_penjualan); ?>],
+                            "values": [<?php echo($sales[2]->total_jual); ?>],
                             "text": "<?php echo($sales[2]->nama); ?>",
                             "background-color": "#2c13f8"
                         }

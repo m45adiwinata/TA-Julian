@@ -27,10 +27,20 @@ class PembelianController extends Controller
             return redirect('/login');
         }
         if ($request->query('per_page')) {
-            session(['per_page'=> $request->query('per_page')]);
+            $data['pembelians'] = Pembelian::paginate($request->query('per_page'));
+            setcookie("per_page", $request->query('per_page'));
+            $data['per_page'] = $request->query('per_page');
         }
-        $data['pembelians'] = Pembelian::paginate(session('per_page'));
-        $data['pembelians2'] = Pembelian::get();
+        else if (count($_COOKIE) <= 4) {
+            setcookie("per_page", 10);
+            $data['pembelians'] = Pembelian::paginate(10);
+            $data['per_page'] = 10;
+        }
+        else {
+            $data['pembelians'] = Pembelian::paginate($_COOKIE['per_page']);
+            $data['per_page'] = $_COOKIE['per_page'];
+        }
+        $data['pembelians2'] = $data['pembelians']->items();
         foreach ($data['pembelians2'] as $key => $pembelian) {
             $pembelian->status = Status::find($pembelian->status_id)->nama;
             $pembelian->barangs = $pembelian->barangPembelian()->get();

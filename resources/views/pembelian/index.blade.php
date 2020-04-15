@@ -64,6 +64,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                         <thead class="text-uppercase">
                                             <tr>
                                                 <th scope="col">No</th>
+                                                <th scope="col">ID</th>
                                                 <th scope="col">Tanggal</th>
                                                 <th scope="col">Suplier</th>
                                                 <th scope="col">Total Harga</th>
@@ -74,18 +75,11 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @php
-                                                if(!session('per_page')) {
-                                                    $per_page = 5;
-                                                }
-                                                else {
-                                                    $per_page = session('per_page');
-                                                }
-                                            @endphp
                                             @foreach($pembelians as $key => $pembelian)
                                             <tr>
                                                 
                                                 <th scope="row">{{$per_page * ($pembelians->currentPage()-1) + $key+1}}</th>
+                                                <td>{{$pembelian->id}}</td>
                                                 <td>{{date('d-m-Y', strtotime($pembelian->created_at))}}</td>
                                                 <td>{{$pembelian->suplier()->first()->nama}}</td>
                                                 <td>
@@ -214,7 +208,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
 @section('script')
 <script>
     var idPemb;
-    var dataPembelian = <?php echo($pembelians2) ?>;
+    var dataPembelian = <?php echo(json_encode($pembelians2)) ?>;
     $(document).ready(function() {
         $('select[name="per_page"]').change(function(e) {
             e.preventDefault();
