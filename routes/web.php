@@ -38,3 +38,7 @@ Route::get('/eoq/get-data-penjualan/{tanggal1}/{tanggal2}', 'EoqController@getDa
 
 Route::get('/history-pembelian', 'HistPembelianController@index');
 Route::get('/history-pembelian/get-data/{tgl1}/{tgl2}', 'HistPembelianController@getData');
+
+Route::get('/history-penjualan', 'HistPenjualanController@index');
+Route::get('/history-penjualan/get-data/{tgl1}/{tgl2}', 'HistPenjualanController@getData');
+Route::get('/modal-items-penjualan/{id}', 'HistPenjualanController@getPenjualan');

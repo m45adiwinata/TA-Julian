@@ -16,7 +16,8 @@ class HistPembelianController extends Controller
 {
     public function index()
     {
-    	$data['pembelians'] = Pembelian::get();
+        $data['pembelians'] = Pembelian::get();
+    	$data['pembelians2'] = Pembelian::orderBy('created_at', 'desc')->get();
     	$total = 0;
         foreach ($data['pembelians'] as $key => $pembelian) {
             $pembelian->status = Status::find($pembelian->status_id)->nama;

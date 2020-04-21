@@ -105,11 +105,11 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                 <div class="s-report-inner pr--20 pt--30 mb-3">
                                     <div class="icon"><i class="fa fa-money"></i></div>
                                     <div class="s-report-title d-flex justify-content-between">
-                                        <h4 class="header-title mb-0">Pembelian</h4>
+                                        <h4 class="header-title mb-0">Penjualan</h4>
                                         <p>Rentang Waktu</p>
                                     </div>
                                     <div class="d-flex justify-content-between pb-2">
-                                        <h2 id="total-pembelians">Rp {{number_format($total, 2, ',', '.')}}</h2>
+                                        <h2 id="total-penjualans">Rp {{number_format($total, 2, ',', '.')}}</h2>
                                         <!-- <span>- 45.87</span> -->
                                     </div>
                                 </div>
@@ -120,67 +120,42 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                     <table class="table table-hover progress-table text-center">
                                         <thead class="text-uppercase">
                                             <tr>
+                                                <th scope="col">No</th>
                                                 <th scope="col">ID</th>
                                                 <th scope="col">Tanggal</th>
-                                                <th scope="col">Suplier</th>
-                                                <th scope="col">Total Harga</th>
-                                                <th scope="col">Diskon</th>
+                                                <th scope="col">Pelanggan</th>
+                                                <th scope="col">Sales</th>
                                                 <th scope="col">Barang</th>
-                                                <th scope="col">status</th>
+                                                <th scope="col">Total</th>
                                                 <th scope="col">action</th>
                                             </tr>
                                         </thead>
                                         <tbody id="main-tbl-body">
-                                            @foreach($pembelians2 as $key => $pembelian)
+                                            @foreach($penjualans as $key => $penjualan)
                                             <tr>
-                                                <th scope="row">{{$key+1}}</th>
-                                                <td>{{date('d-m-Y', strtotime($pembelian->created_at))}}</td>
-                                                <td>{{$pembelian->suplier()->first()->nama}}</td>
+                                                <td>{{$key + 1}}</td>
+                                                <td>{{$penjualan->id}}</td>
+                                                <td>{{date('d-m-Y', strtotime($penjualan->created_at))}}</td>
+                                                <td>{{$penjualan->pelanggan()->first()->nama}}</td>
+                                                <td>{{$penjualan->sales()->first()->nama}}</td>
+                                                <td><span id="lihat" class="status-p bg-primary" onclick="lihatBarang({{$penjualan->id}})">Lihat Barang</span></td>
                                                 <td>
-                                                    Rp 
-                                                    @php
-                                                    $temp = 0;
-                                                    foreach($pembelian->barangPembelian()->get() as $beli) {
-                                                        $temp += $beli->harga_beli;
+                                                    @php $temp = 0;
+                                                    foreach($penjualan->barangPenjualan()->get() as $barang) {
+                                                        $temp += $barang->harga_jual;
                                                     }
-                                                    if($pembelian->type_diskon_id == 0) {
-                                                        $temp -= $pembelian->diskon;
+                                                    if($penjualan->type_diskon == 1) {
+                                                        $temp -= $temp * $penjualan->diskon / 100;
                                                     }
                                                     else {
-                                                        $diskon = $temp * $pembelian->diskon / 100;
-                                                        $temp -= $diskon;
+                                                        $temp -= $penjualan->diskon;
                                                     }
                                                     echo number_format($temp, 2, ',', '.');
                                                     @endphp
                                                 </td>
                                                 <td>
-                                                    @php
-                                                    if($pembelian->type_diskon_id == 0) {
-                                                        if($pembelian->diskon) {
-                                                            echo "Rp ".$pembelian->diskon;
-                                                        }
-                                                        else {
-                                                            echo "Rp 0";
-                                                        }
-                                                    }
-                                                    else {
-                                                        echo $pembelian->diskon."%";
-                                                    }
-                                                    @endphp
-                                                </td>
-                                                <td>
-                                                    <span id="lihat" class="status-p bg-primary" onclick="lihatBarang({{$pembelian->id}})">Lihat Barang</span>
-                                                </td>
-                                                <td>
-                                                    <select name="status" id="status-{{$pembelian->id}}" onchange="setStatus({{$pembelian->id}})">
-                                                        @foreach($statuses as $status)
-                                                        <option value="{{$status->id}}"{{$pembelian->status_id == $status->id ? ' selected' : ''}}>{{$status->nama}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </td>
-                                                <td>
                                                     <ul class="d-flex justify-content-center">
-                                                        <li class="mr-3"><a href="{{route('pembelian.edit', $pembelian->id)}}" class="text-secondary"><i class="fa fa-edit"></i></a></li>
+                                                        <li class="mr-3"><a href="{{route('penjualan.edit', $penjualan->id)}}" class="text-secondary"><i class="fa fa-edit"></i></a></li>
                                                     </ul>
                                                 </td>
                                             </tr>
@@ -250,20 +225,19 @@ body {font-family: Arial, Helvetica, sans-serif;}
 @endsection
 @section('script')
 <script>
-    var idPemb;
-    var dataPembelian = <?php echo($pembelians) ?>;
+    var dataPenjualan = <?php echo(json_encode($penjualans)) ?>;
+    var dataPenjualanGr = <?php echo(json_encode($penjualans2)) ?>;
     var chart;
     var ctx;
     $(document).ready(function() {
         $('#oke').click(function() {
             var tgl1 = $('#tanggal1').val();
             var tgl2 = $('#tanggal2').val();
-            $.get('/history-pembelian/get-data/'+tgl1+'/'+tgl2, function(data) {
+            $.get('/history-penjualan/get-data/'+tgl1+'/'+tgl2, function(data) {
                 if ($('#coin_salesx').length) {
-                    // var ctx = document.getElementById("coin_salesx").getContext('2d');
                     var lbls = [];
                     var dts = [];
-                    $.each(data.pembelians, function(key, value) {
+                    $.each(data.penjualans, function(key, value) {
                         lbls.push(value.tanggal);
                         dts.push(value.temp);
                     });
@@ -272,34 +246,84 @@ body {font-family: Arial, Helvetica, sans-serif;}
                     chart.update();
                 }
                 $('#main-tbl-body').html('');
-                $.each(data.pembelians, function(key, value) {
+                $.each(data.penjualans, function(key, value) {
                     $('#main-tbl-body').append(
                         '<tr>'+
                             '<th scope="row">'+(key+1)+'</th>'+
+                            '<td>'+value.id+'</td>'+
                             '<td>'+value.tanggal2+'</td>'+
-                            '<td>'+value.suplier+'</td>'+
-                            '<td>Rp '+value.temp+'</td>'+
-                            '<td>'+value.diskon_js+'</td>'+
+                            '<td>'+value.nama_pelanggan+'</td>'+
+                            '<td>'+value.nama_sales+'</td>'+
                             '<td>'+
                                 '<span id="lihat" class="status-p bg-primary" onclick="lihatBarang('+value.id+')">Lihat Barang</span>'+
                             '</td>'+
-                            '<td>'+
-                                '<select name="status" id="status-'+value.id+'" onchange="setStatus('+value.id+')">'+
-                                    '<option value="1">On Progress</option>'+
-                                    '<option value="2">Complete</option>'+
-                                    '<option value="3">Cancel</option>'+
-                                '</select>'+
-                            '</td>'+
+                            '<td>Rp '+value.temp+'</td>'+
                             '<td>'+
                                 '<ul class="d-flex justify-content-center">'+
-                                    '<li class="mr-3"><a href="/pembelian/'+value.id+'/edit" class="text-secondary"><i class="fa fa-edit"></i></a></li>'+
+                                    '<li class="mr-3"><a href="/penjualan/'+value.id+'/edit" class="text-secondary"><i class="fa fa-edit"></i></a></li>'+
                                 '</ul>'+
                             '</td>'+
                         '</tr>'
                     );
-                    $('#status-'+value.id).val(value.status_id);
                 });
+                $('#total-penjualans').html('Rp ' + data.total);
             });
+        });
+        $('#close-modal-status')[0].onclick = function() {
+            var data;
+            $.each(dataPenjualan, function(key, value) {
+                if(value.id == idPenj) {
+                    data = value;
+                    return false;
+                }
+            });
+            $('#myModal').css('display', 'none');
+            $('#modal-barang').css('display', 'block');
+        }
+        $('#close-modal-barang')[0].onclick = function() {
+            $('#modal-barang').css('display', 'none');
+        }
+        $('#modal-yes').click(function() {
+            $.get('/penjualan/set-status-barang-penjualan/'+idPenj+'/'+idBar+'/'+$('#status-'+idBar).val(), function(data) {
+                if (data == 1) {
+                    $.each(dataPenjualan, function(key, value) {
+                        if(value.id == idPenj) {
+                            data = value;
+                            return false;
+                        }
+                        $.each(data.barangs, function(key, val) {
+                            if(val.id == idBar) {
+                                val.status_id = $('#status-'+idBar).val();
+                                return false;
+                            }
+                        });
+                    });
+                    $('#myModal').css('display', 'none');
+                    $('#modal-barang').css('display', 'block');
+                }
+                else {
+                    alert("Error: Stok barang tidak cukup.");
+                    var data;
+                    $.each(dataPenjualan, function(key, value) {
+                        if(idPenj == value.id) {
+                            data = value;
+                            return false;
+                        }
+                    });
+                    var temp;
+                    $.each(data.barangs, function(key, value) {
+                        if (value.barang_id == idBar) {
+                            temp = value;
+                            return false;
+                        }
+                    });
+                    $('#status-'+idBar).val(temp.status_id);
+                }
+            });
+        });
+        $('#modal-no').click(function() {
+            $('#myModal').css('display', 'none');
+            $('#modal-barang').css('display', 'block');
         });
         if ($('#coin_salesx').length) {
             ctx = document.getElementById("coin_salesx").getContext('2d');
@@ -309,8 +333,8 @@ body {font-family: Arial, Helvetica, sans-serif;}
                 // The data for our dataset
                 data: {
                     labels: [
-                        @foreach($pembelians as $pembelian)
-                        '{{date("d/m/Y", strtotime($pembelian->created_at))}}',
+                        @foreach($penjualans2 as $p)
+                        '{{date("d/m/Y", strtotime($p->created_at))}}',
                         @endforeach
                     ],
                     datasets: [{
@@ -319,17 +343,19 @@ body {font-family: Arial, Helvetica, sans-serif;}
                         borderColor: '#0b76b6',
                         data: [
                         <?php 
-                        foreach ($pembelians as $key => $pembelian) {
+                        foreach ($penjualans2 as $key => $p) {
                             $temp = 0;
-                            foreach($pembelian->barangPembelian()->get() as $beli) {
-                                $temp += $beli->harga_beli;
-                            }
-                            if($pembelian->type_diskon_id == 0) {
-                                $temp -= $pembelian->diskon;
-                            }
-                            else {
-                                $diskon = $temp * $pembelian->diskon / 100;
-                                $temp -= $diskon;
+                            foreach($p->barangPenjualan()->get() as $bp) {
+                                if ($bp->status_id == 2) {
+                                    $temp += $bp->harga_jual;
+                                    if($p->type_diskon == 0) {
+                                        $temp -= $p->diskon;
+                                    }
+                                    else {
+                                        $diskon = $temp * $p->diskon / 100;
+                                        $temp -= $diskon;
+                                    }
+                                }
                             }
                             echo $temp.',';
                         }
@@ -375,80 +401,55 @@ body {font-family: Arial, Helvetica, sans-serif;}
                 }
             });
         }
-        $('#modal-yes').click(function() {
-            var id = idPemb;
-            $.get('/pembelian/set-status/' + id + '/' + $('#status-'+id).val(), function(data) {
-                $('#myModal').css('display', 'none');
-            });
-        });
-        $('#modal-no').click(function() {
-            var data;
-            $.each(dataPembelian, function(key, value) {
-                if(value.id == idPemb) {
-                    data = value;
-                    return false;
-                }
-            });
-            $('#status-'+idPemb).val(data.status_id);
-            $('#myModal').css('display', 'none');
-        });
     });
-    function setStatus(id) {
-        $('#myModal').attr({'style': 'display: block'});
-        idPemb = id;
-    }
-    $('#close-modal-status')[0].onclick = function() {
-        var data;
-        $.each(dataPembelian, function(key, value) {
-            if(value.id == idPemb) {
-                data = value;
-                return false;
-            }
+    function lihatBarang(id) {
+        $('#table-barang').html('');
+        // var data;
+        idPenj = id;
+        // $.each(dataPenjualan, function(key, value) {
+        //     if(id == value.id) {
+        //         data = value;
+        //         return false;
+        //     }
+        // });
+        $.get('modal-items-penjualan/' + id, function(data) {
+            $.each(data.barangs, function(key, value) {
+                $('#table-barang').append(
+                    '<tr>'+
+                        '<td>'+(key+1)+'</td>'+
+                        '<td>'+value.nama+'</td>'+
+                        '<td>'+value.qty+'</td>'+
+                        '<td>'+value.harga+'</td>'+
+                        '<td>'+value.harga_jual+'</td>'+
+                        '<td>'+
+                        '<select id="status-'+value.barang_id+'" onchange="changeStatus('+value.barang_id+')">'+
+                            '@foreach($statuses as $status)'+
+                            '<option value="{{$status->id}}">{{$status->nama}}</option>'+
+                            '@endforeach'+
+                        '</select>'+
+                        '</td>'+
+                    '</tr>'
+                );
+                $('#status-'+value.barang_id).val(value.status_id);
+            });
         });
-        $('#status-'+idPemb).val(data.status_id);
-        $('#myModal').css('display', 'none');
+        $('#modal-barang').css('display', 'block');
     }
-    $('#close-modal-barang')[0].onclick = function() {
-        $('#modal-barang').css('display', 'none');
-    }
+    
     window.onclick = function(event) {
         if (event.target == document.getElementById("myModal")) {
             var data;
-            $.each(dataPembelian, function(key, value) {
-                if(value.id == idPemb) {
-                    data = value;
-                    return false;
-                }
-            });
-            $('#status-'+idPemb).val(data.status_id);
             $('#myModal').css('display', 'none');
+            $('#modal-barang').css('display', 'block');
         }
         if (event.target == document.getElementById("modal-barang")) {
             $('#modal-barang').css('display', 'none');
         }
     }
-    function lihatBarang(id) {
-        $('#table-barang').html('');
-        var data;
-        $.each(dataPembelian, function(key, value) {
-            if(id == value.id) {
-                data = value;
-                return false;
-            }
-        });
-        console.log(data);
-        $.each(data.barangs, function(key, value) {
-            $('#table-barang').append(
-                '<tr>'+
-                    '<td>'+(key+1)+'</td>'+
-                    '<td>'+value.nama+'</td>'+
-                    '<td>'+value.qty+'</td>'+
-                    '<td>'+value.harga+'</td>'+
-                    '<td>'+value.harga_beli+'</td>'+
-                '</tr>'
-            );
-        });
-        $('#modal-barang').css('display', 'block');
+    function changeStatus(id) {
+        idBar = id;
+        $('#modal-barang').css('display', 'none');
+        $('#myModal').attr({'style': 'display: block'});
     }
 </script>
 @endsection

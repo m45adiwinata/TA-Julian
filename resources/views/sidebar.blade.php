@@ -14,7 +14,7 @@
                         <ul class="collapse">
                             <li{{$page == 'home' ? ' class=active' : ''}}><a href="/">Home</a></li>
                             <li{{$page == 'history_pembelian' ? ' class=active' : ''}}><a href="/history-pembelian">History Pembelian</a></li>
-                            <li><a href="index3.html">History Penjualan</a></li>
+                            <li{{$page == 'history_penjualan' ? ' class=active' : ''}}><a href="/history-penjualan">History Penjualan</a></li>
                         </ul>
                     </li>
                     <li>
