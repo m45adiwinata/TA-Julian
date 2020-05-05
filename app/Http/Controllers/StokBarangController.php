@@ -21,8 +21,14 @@ class StokBarangController extends Controller
         $data['title'] = 'Stok';
         $data['sub_title'] = 'Data';
         $data['sub_link'] = '/stok-barang';
+        $data['stok'] = StokBarang::get();
+        foreach ($data['stok'] as $key => $s) {
+            $s->barang = Barang::find($s->barang_id)->nama;
+            $s->lokasi = Lokasi::find($s->lokasi_id)->nama;
+            $s->sub_lokasi = SubLokasi::find($s->sub_lokasi_id)->nama;
+        }
 
-        return view('stok.index');
+        return view('stok.index', $data);
     }
 
     /**

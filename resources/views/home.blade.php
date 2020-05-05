@@ -93,6 +93,13 @@
                     <div class="card h-full">
                         <div class="card-body">
                             <h4 class="header-title mb-0">Penjualan Sales</h4>
+                            <div>
+                                <label for="date_start-1">From: </label>
+                                <input type="date" name="date_start" id="date_start-1">
+                                <label for="date_end-1">To: </label>
+                                <input type="date" name="date_end" id="date_end-1">
+                                <button id="procceed-1">Procceed</button>
+                            </div>
                             <div id="coin_distribution"></div>
                         </div>
                     </div>
@@ -106,10 +113,13 @@
                         <div class="card-body">
                             <div class="d-sm-flex justify-content-between align-items-center">
                                 <h4 class="header-title mb-0">Pelanggan Terbaik</h4>
-                                <select class="custome-select border-0 pr-3">
-                                    <option selected>Last 24 Hours</option>
-                                    <option value="0">01 July 2018</option>
-                                </select>
+                                <div>
+                                    <label for="date_start-2">From: </label>
+                                    <input type="date" name="date_start" id="date_start-2">
+                                    <label for="date_end-2">To: </label>
+                                    <input type="date" name="date_end" id="date_end-2">
+                                    <button id="procceed-2">Procceed</button>
+                                </div>
                             </div>
                             <div class="market-status-table mt-4">
                                 <div class="table-responsive">
@@ -123,14 +133,14 @@
                                                 <th scope="col">Stats</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="plbest-tbody">
                                             @foreach($pelanggans as $key => $pelanggan)
                                             <tr>
-                                                <th scope="row">{{$key+1}}</th>
-                                                <td>{{$pelanggan->nama}}</td>
-                                                <td>{{$pelanggan->alamat}}</td>
-                                                <td>Rp {{number_format($pelanggan->total_beli, 2, ',', '.')}}</td>
-                                                <td class="stats-chart"><canvas id="mvaluechart-{{$pelanggan->id}}"></canvas></td>
+                                                <th scope="row" id="plbest-no-{{$key}}">{{$key+1}}</th>
+                                                <td id="plbest-nama-{{$key}}">{{$pelanggan->nama}}</td>
+                                                <td id="plbest-alamat-{{$key}}">{{$pelanggan->alamat}}</td>
+                                                <td id="plbest-totalbeli-{{$key}}">Rp {{number_format($pelanggan->total_beli, 2, ',', '.')}}</td>
+                                                <td class="stats-chart" id="plbest-chart-{{$key}}"><canvas id="mvaluechart-{{$pelanggan->id}}"></canvas></td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -142,134 +152,6 @@
                 </div>
             </div>
             <!-- market value area end -->
-            <!-- row area start -->
-            <div class="row">
-                <!-- Live Crypto Price area start -->
-                <!-- <div class="col-lg-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="header-title">Live Crypto Price</h4>
-                            <div class="cripto-live mt-5">
-                                <ul>
-                                    <li>
-                                        <div class="icon b">b</div> Bitcoin<span><i class="fa fa-long-arrow-up"></i>$876909.00</span></li>
-                                    <li>
-                                        <div class="icon l">l</div> Litecoin<span><i class="fa fa-long-arrow-up"></i>$29780.00</span></li>
-                                    <li>
-                                        <div class="icon d">d</div> Dashcoin<span><i class="fa fa-long-arrow-up"></i>$13276.00</span></li>
-                                    <li>
-                                        <div class="icon b">b</div> Bitcoindash<span><i class="fa fa-long-arrow-down"></i>$5684.890</span></li>
-                                    <li>
-                                        <div class="icon e">e</div> Euthorium<span><i class="fa fa-long-arrow-down"></i>$3890.98</span></li>
-                                    <li>
-                                        <div class="icon t">b</div> Tcoin<span><i class="fa fa-long-arrow-up"></i>$750.789</span></li>
-                                    <li>
-                                        <div class="icon b">b</div> Bitcoin<span><i class="fa fa-long-arrow-up"></i>$325.037</span></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-                <!-- Live Crypto Price area end -->
-                <!-- trading history area start -->
-                <!-- <div class="col-lg-8 mt-sm-30 mt-xs-30">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-sm-flex justify-content-between align-items-center">
-                                <h4 class="header-title">Trading History</h4>
-                                <div class="trd-history-tabs">
-                                    <ul class="nav" role="tablist">
-                                        <li>
-                                            <a class="active" data-toggle="tab" href="#buy_order" role="tab">Buy Order</a>
-                                        </li>
-                                        <li>
-                                            <a data-toggle="tab" href="#sell_order" role="tab">Sell Order</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <select class="custome-select border-0 pr-3">
-                                    <option selected>Last 24 Hours</option>
-                                    <option value="0">01 July 2018</option>
-                                </select>
-                            </div>
-                            <div class="trad-history mt-4">
-                                <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade show active" id="buy_order" role="tabpanel">
-                                        <div class="table-responsive">
-                                            <table class="dbkit-table">
-                                                <tr class="heading-td">
-                                                    <td>Trading ID</td>
-                                                    <td>Time</td>
-                                                    <td>Status</td>
-                                                    <td>Amount</td>
-                                                    <td>Last Trade</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>78211</td>
-                                                    <td>4.00 AM</td>
-                                                    <td>Pending</td>
-                                                    <td>$758.90</td>
-                                                    <td>$05245.090</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>782782</td>
-                                                    <td>4.00 AM</td>
-                                                    <td>Pending</td>
-                                                    <td>$77878.90</td>
-                                                    <td>$7778.090</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>89675978</td>
-                                                    <td>4.00 AM</td>
-                                                    <td>Pending</td>
-                                                    <td>$0768.90</td>
-                                                    <td>$0945.090</td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="sell_order" role="tabpanel">
-                                        <div class="table-responsive">
-                                            <table class="dbkit-table">
-                                                <tr class="heading-td">
-                                                    <td>Trading ID</td>
-                                                    <td>Time</td>
-                                                    <td>Status</td>
-                                                    <td>Amount</td>
-                                                    <td>Last Trade</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>8964978</td>
-                                                    <td>4.00 AM</td>
-                                                    <td>Pending</td>
-                                                    <td>$445.90</td>
-                                                    <td>$094545.090</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>89675978</td>
-                                                    <td>4.00 AM</td>
-                                                    <td>Pending</td>
-                                                    <td>$78.90</td>
-                                                    <td>$074852945.090</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>78527878</td>
-                                                    <td>4.00 AM</td>
-                                                    <td>Pending</td>
-                                                    <td>$0768.90</td>
-                                                    <td>$65465.090</td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-                <!-- trading history area end -->
-            </div>
-            <!-- row area end -->
         </div>
     </div>
     <!-- main content area end -->
@@ -559,82 +441,82 @@
         /*--------------  overview-chart END ------------*/
         /*--------------  coin distrubution chart START ------------*/
         if ($('#coin_distribution').length) {
-        zingchart.THEME = "classic";
-        var myConfig = {
-            "globals": {
-                "font-family": "Roboto"
-            },
-            "graphset": [{
-                    "type": "pie",
-                    "background-color": "#fff",
-                    "legend": {
-                        "background-color": "none",
-                        "border-width": 0,
-                        "shadow": false,
-                        "layout": "float",
-                        "margin": "auto auto 16% auto",
-                        "marker": {
-                            "border-radius": 3,
-                            "border-width": 0
-                        },
-                        "item": {
-                            "color": "%backgroundcolor"
-                        }
-                    },
-                    "plotarea": {
-                        "background-color": "#FFFFFF",
-                        "border-color": "#DFE1E3",
-                        "margin": "25% 8%"
-                    },
-                    "labels": [{
-                        "x": "45%",
-                        "y": "47%",
-                        "width": "10%",
-                        "text": "340 Coin",
-                        "font-size": 17,
-                        "font-weight": 700
-                    }],
-                    "plot": {
-                        "size": 70,
-                        "slice": 90,
-                        "margin-right": 0,
-                        "border-width": 0,
-                        "shadow": 0,
-                        "value-box": {
-                            "visible": true
-                        },
-                        "tooltip": {
-                            "text": "Rp %v",
+            zingchart.THEME = "classic";
+            var myConfig = {
+                "globals": {
+                    "font-family": "Roboto"
+                },
+                "graphset": [{
+                        "type": "pie",
+                        "background-color": "#fff",
+                        "legend": {
+                            "background-color": "none",
+                            "border-width": 0,
                             "shadow": false,
-                            "border-radius": 2,
-                            'thousands-separator': "."
-                        }
-                    },
-                    "series": [{
-                            "values": [<?php echo($sales[0]->total_jual); ?>],
-                            "text": "<?php echo($sales[0]->nama); ?>",
-                            "background-color": "#4cff63"
+                            "layout": "float",
+                            "margin": "auto auto 16% auto",
+                            "marker": {
+                                "border-radius": 3,
+                                "border-width": 0
+                            },
+                            "item": {
+                                "color": "%backgroundcolor"
+                            }
                         },
-                        {
-                            "values": [<?php echo($sales[1]->total_jual); ?>],
-                            "text": "<?php echo($sales[1]->nama); ?>",
-                            "background-color": "#fd9c21"
+                        "plotarea": {
+                            "background-color": "#FFFFFF",
+                            "border-color": "#DFE1E3",
+                            "margin": "25% 8%"
                         },
-                        {
-                            "values": [<?php echo($sales[2]->total_jual); ?>],
-                            "text": "<?php echo($sales[2]->nama); ?>",
-                            "background-color": "#2c13f8"
-                        }
-                    ]
-                }
+                        "labels": [{
+                            "x": "45%",
+                            "y": "47%",
+                            "width": "10%",
+                            "text": "",
+                            "font-size": 17,
+                            "font-weight": 700
+                        }],
+                        "plot": {
+                            "size": 70,
+                            "slice": 90,
+                            "margin-right": 0,
+                            "border-width": 0,
+                            "shadow": 0,
+                            "value-box": {
+                                "visible": true
+                            },
+                            "tooltip": {
+                                "text": "Rp %v",
+                                "shadow": false,
+                                "border-radius": 2,
+                                'thousands-separator': "."
+                            }
+                        },
+                        "series": [{
+                                "values": [<?php echo($sales[0]->total_jual); ?>],
+                                "text": "<?php echo($sales[0]->nama); ?>",
+                                "background-color": "#4cff63"
+                            },
+                            {
+                                "values": [<?php echo($sales[1]->total_jual); ?>],
+                                "text": "<?php echo($sales[1]->nama); ?>",
+                                "background-color": "#fd9c21"
+                            },
+                            {
+                                "values": [<?php echo($sales[2]->total_jual); ?>],
+                                "text": "<?php echo($sales[2]->nama); ?>",
+                                "background-color": "#2c13f8"
+                            }
+                        ]
+                    }
 
-            ]
-        };
+                ]
+            };
 
-        zingchart.render({
-            id: 'coin_distribution',
-            data: myConfig,
-        });
+            zingchart.render({
+                id: 'coin_distribution',
+                data: myConfig,
+            });
         }
         /*--------------  coin distrubution chart END ------------*/
         
@@ -754,7 +636,118 @@
                 }
             }
         });
+        $('#procceed-1').click(function() {
+            if($('#date_start-1').val() && $('#date_end-1').val()) {
+                if($('#date_start-1').val() < $('#date_end-1').val()) {
+                    $.get('get-penjualan-sales/'+$('#date_start-1').val()+'/'+$('#date_end-1').val(), function(data) {
+                        renderGrafikPenjualanSales(data);
+                    });
+                }
+            }
+        });
+        $('#procceed-2').click(function() {
+            if($('#date_start-2').val() && $('#date_end-2').val()) {
+                if($('#date_start-2').val() < $('#date_end-2').val()) {
+                    $.get('get-rank-pelanggan/'+$('#date_start-2').val()+'/'+$('#date_end-2').val(), function(data) {
+                        $('#plbest-tbody').html('');
+                        $.each(data, function(key, value) {
+                            $('#plbest-tbody').append(
+                                '<tr>'+
+                                    '<th scope="row" id="plbest-no-'+key+'">'+(key+1)+'</th>'+
+                                    '<td id="plbest-nama-'+key+'">'+value.nama+'</td>'+
+                                    '<td id="plbest-alamat-'+key+'">'+value.alamat+'</td>'+
+                                    '<td id="plbest-totalbeli-'+key+'">Rp '+value.total_beli_str+'</td>'+
+                                    '<td class="stats-chart" id="plbest-chart-'+key+'"><canvas id="mvaluechart-'+value.id+'"></canvas></td>+'+
+                                '</tr>'
+                            );
+                            renderGrafikRankPelanggan(value.id, value.total_belanja_perhari, value.label_perhari);
+                        });
+                    });
+                }
+            }
+        });
     });
+    function renderGrafikPenjualanSales(data) {
+        if ($('#coin_distribution').length) {
+            zingchart.THEME = "classic";
+            var myConfig = {
+                "globals": {
+                    "font-family": "Roboto"
+                },
+                "graphset": [{
+                        "type": "pie",
+                        "background-color": "#fff",
+                        "legend": {
+                            "background-color": "none",
+                            "border-width": 0,
+                            "shadow": false,
+                            "layout": "float",
+                            "margin": "auto auto 16% auto",
+                            "marker": {
+                                "border-radius": 3,
+                                "border-width": 0
+                            },
+                            "item": {
+                                "color": "%backgroundcolor"
+                            }
+                        },
+                        "plotarea": {
+                            "background-color": "#FFFFFF",
+                            "border-color": "#DFE1E3",
+                            "margin": "25% 8%"
+                        },
+                        "labels": [{
+                            "x": "45%",
+                            "y": "47%",
+                            "width": "10%",
+                            "text": "",
+                            "font-size": 17,
+                            "font-weight": 700
+                        }],
+                        "plot": {
+                            "size": 70,
+                            "slice": 90,
+                            "margin-right": 0,
+                            "border-width": 0,
+                            "shadow": 0,
+                            "value-box": {
+                                "visible": true
+                            },
+                            "tooltip": {
+                                "text": "Rp %v",
+                                "shadow": false,
+                                "border-radius": 2,
+                                'thousands-separator': "."
+                            }
+                        },
+                        "series": [
+                            {
+                                "values": [data[0].total_jual],
+                                "text": data[0].nama,
+                                "background-color": "#4cff63"
+                            },
+                            {
+                                "values": [data[1].total_jual],
+                                "text": data[1].nama,
+                                "background-color": "#fd9c21"
+                            },
+                            {
+                                "values": [data[2].total_jual],
+                                "text": data[2].nama,
+                                "background-color": "#2c13f8"
+                            }
+                        ]
+                    }
+
+                ]
+            };
+
+            zingchart.render({
+                id: 'coin_distribution',
+                data: myConfig,
+            });
+        }
+    }
     function renderGrafikRankPelanggan(grafik_id, data, labels) {
         if ($('#mvaluechart-'+grafik_id).length) {
             var ctx = document.getElementById('mvaluechart-'+grafik_id).getContext('2d');

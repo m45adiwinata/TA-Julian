@@ -2,7 +2,7 @@
 <div class="sidebar-menu">
     <div class="sidebar-header">
         <div class="logo">
-            <a href="index.html"><img src="{{asset('assets/images/icon/logo.png')}}" alt="logo"></a>
+            <a href="index.html">AIU</a>
         </div>
     </div>
     <div class="main-menu">
@@ -17,8 +17,12 @@
                             <li{{$page == 'history_penjualan' ? ' class=active' : ''}}><a href="/history-penjualan">History Penjualan</a></li>
                         </ul>
                     </li>
+                    @if($page == 'eoq')
+                    <li class="active">
+                    @else
                     <li>
-                        <a href="eoq" aria-expanded="true"><i class="ti-layout-sidebar-left"></i><span>EOQ</span></a>
+                    @endif
+                        <a href="eoq" aria-expanded="true"><i class="fa fa-balance-scale"></i><span>EOQ</span></a>
                     </li>
                     @if($page == 'data_penjualan' || $page == 'buat_penjualan')
                     <li class="active">
@@ -42,6 +46,13 @@
                             <li{{$page == 'data_pembelian' ? ' class=active' : ''}}><a href="/pembelian">Data Pembelian</a></li>
                             <li{{$page == 'buat_pembelian' ? ' class=active' : ''}}><a href="/pembelian/create">Buat Pembelian</a></li>
                         </ul>
+                    </li>
+                    @if($page == 'stok')
+                    <li class="active">
+                    @else
+                    <li>
+                    @endif
+                        <a href="stok-barang" aria-expanded="true"><i class="fa fa-wikipedia-w"></i><span>Stok Barang</span></a>
                     </li>
                 </ul>
             </nav>

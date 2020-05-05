@@ -126,6 +126,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                                 </td>
                                                 <td>
                                                     <ul class="d-flex justify-content-center">
+                                                        <li class="mr-3"><a href="pembelian/get-nota/{{$pembelian->id}}" class="text-secondary"><i class="fa fa-print"></i></a></li>
                                                         <li class="mr-3"><a href="{{route('pembelian.edit', $pembelian->id)}}" class="text-secondary"><i class="fa fa-edit"></i></a></li>
                                                     </ul>
                                                 </td>

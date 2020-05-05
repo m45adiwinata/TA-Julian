@@ -64,6 +64,7 @@ class HomeController extends Controller
         $data['labels'] = $labels;
         $sales = Sales::get();
         foreach ($sales as $key => $s) {
+            $s->total_jual = 0;
             foreach ($s->penjualan()->get() as $key => $p) {
                 $total = 0;
                 foreach ($p->barangPenjualan()->get() as $key => $bp) {
@@ -75,8 +76,8 @@ class HomeController extends Controller
                     $diskon = $total * $p->diskon / 100;
                 }
                 $total -= $diskon;
+                $s->total_jual += $total;
             }
-            $s->total_jual = $total;
         }
         // for ($i=0; $i < count($sales); $i++) { 
         //     for ($j=$i+1; $j < count($sales); $j++) { 
@@ -257,5 +258,86 @@ class HomeController extends Controller
         $data['labels'] = $labels;
 
         return $data;
+    }
+
+    public function getPenjualanSalesNHari($start, $end)
+    {
+        $sales = Sales::get();
+        foreach ($sales as $key => $s) {
+            $sales->total_jual = 0;
+            foreach ($s->penjualan()->whereDate('created_at', '>=', $start)->whereDate('created_at', '<=', $end)->get() as $key => $p) {
+                $total = 0;
+                foreach ($p->barangPenjualan()->get() as $key => $bp) {
+                    $total += $bp->harga_jual;
+                }
+                if ($p->type_diskon == 0) {
+                    $diskon = $p->diskon;
+                } else {
+                    $diskon = $total * $p->diskon / 100;
+                }
+                $total -= $diskon;
+                $s->total_jual += $total;
+            }
+        }
+        
+        return $sales;
+    }
+
+    public function getRankPelangganNHari($start, $end)
+    {
+        $end = DateTime::createFromFormat('Y-m-d', $end)->modify('+1 days')->format('Y-m-d');
+        $period = new DatePeriod(
+            new DateTime($start),
+            new DateInterval('P1D'),
+            new DateTime($end)
+        );
+        $pelanggans = Pelanggan::get();
+        foreach ($pelanggans as $key => $pl) {
+            $pl->total_beli = 0;
+            foreach ($pl->penjualan()->whereDate('created_at', '>=', $start)->whereDate('created_at', '<', $end)->get() as $key => $p) {
+                $total = 0;
+                foreach ($p->barangPenjualan()->get() as $key => $bp) {
+                    $temp = $bp->harga_jual;
+                    if ($p->type_diskon == 0) {
+                        $temp -= $p->diskon;
+                    } else {
+                        $temp -= $p->diskon * $temp / 100;
+                    }
+                    $total += $temp;
+                }
+                $pl->total_beli += $total;
+            }
+        }
+        for ($i=0; $i < count($pelanggans); $i++) { 
+            for ($j=$i+1; $j < count($pelanggans); $j++) { 
+                if ($pelanggans[$j]->total_beli > $pelanggans[$i]->total_beli) {
+                    $temp = $pelanggans[$i];
+                    $pelanggans[$i] = $pelanggans[$j];
+                    $pelanggans[$j] = $temp;
+                }
+            }
+        }
+        $pelanggans = $pelanggans->take(10);
+        foreach ($pelanggans as $key => $pl) {
+            $pl->total_beli_str = number_format($pl->total_beli, 2, ',', '.');
+        }
+        foreach ($pelanggans as $key => $pelanggan) {
+            $total_belanja_perhari = array();
+            $labels = array();
+            foreach ($period as $key => $p) {
+                $total = 0;
+                foreach ($pelanggan->penjualan()->whereDate('created_at', $p)->get() as $key => $penjualan) {
+                    foreach ($penjualan->barangPenjualan()->get() as $key => $bp) {
+                        $total += intval($bp->harga_jual);
+                    }
+                }
+                array_push($total_belanja_perhari, $total);
+                array_push($labels, $p->format('Y-m-d'));
+            }
+            $pelanggan->total_belanja_perhari = $total_belanja_perhari;
+            $pelanggan->label_perhari = $labels;
+        }
+        
+        return $pelanggans;
     }
 }

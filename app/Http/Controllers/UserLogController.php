@@ -18,7 +18,11 @@ class UserLogController extends Controller
         $user = User::where(['name' => $request->name, 'password' => $request->password])->get()->first();
         if($user) {
             Auth::login($user);
-            return redirect('/');
+            if ($user->name == 'pegawai') {
+                return redirect('/stok-barang');
+            } else {
+                return redirect('/');
+            }
         }
         else {
             return redirect('/login')->with('fail', 'Username dan password salah.');

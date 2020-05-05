@@ -13,6 +13,7 @@ use App\SubLokasi;
 use Session;
 use Auth;
 use Illuminate\Http\Request;
+use PDF;
 
 class PembelianController extends Controller
 {
@@ -261,5 +262,16 @@ class PembelianController extends Controller
         ];
 
         return $data;
+    }
+
+    public function getNota($id)
+    {
+        $pembelian = Pembelian::find($id);
+        $bulan = ['','Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        $pembelian->tanggal_str = date('j', strtotime($pembelian->created_at)).' '.$bulan[date('n', strtotime($pembelian->created_at))].' '.date('Y', strtotime($pembelian->created_at));
+        $data['pembelian'] = $pembelian;
+
+        $pdf = PDF::loadView('pembelian.nota', $data);
+        return $pdf->stream();
     }
 }

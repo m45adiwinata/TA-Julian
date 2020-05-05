@@ -11,6 +11,7 @@ use App\Status;
 use App\SubLokasi;
 use Auth;
 use Illuminate\Http\Request;
+use PDF;
 
 class PenjualanController extends Controller
 {
@@ -223,6 +224,17 @@ class PenjualanController extends Controller
     public function destroy(Penjualan $penjualan)
     {
         //
+    }
+
+    public function getNota($id)
+    {
+        $penjualan = Penjualan::find($id);
+        $bulan = ['','Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        $penjualan->tanggal_str = date('j', strtotime($penjualan->created_at)).' '.$bulan[date('n', strtotime($penjualan->created_at))].' '.date('Y', strtotime($penjualan->created_at));
+        $data['penjualan'] = $penjualan;
+
+        $pdf = PDF::loadView('penjualan.nota', $data);
+        return $pdf->stream();
     }
 
     public function getPelangganDetail($id)

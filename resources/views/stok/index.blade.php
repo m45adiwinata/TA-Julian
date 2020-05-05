@@ -70,146 +70,6 @@ body {font-family: Arial, Helvetica, sans-serif;}
                     <ul class="notification-area pull-right">
                         <li id="full-view"><i class="ti-fullscreen"></i></li>
                         <li id="full-view-exit"><i class="ti-zoom-out"></i></li>
-                        <li class="dropdown">
-                            <i class="ti-bell dropdown-toggle" data-toggle="dropdown">
-                                <span>2</span>
-                            </i>
-                            <div class="dropdown-menu bell-notify-box notify-box">
-                                <span class="notify-title">You have 3 new notifications <a href="#">view all</a></span>
-                                <div class="nofity-list">
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb"><i class="ti-key btn-danger"></i></div>
-                                        <div class="notify-text">
-                                            <p>You have Changed Your Password</p>
-                                            <span>Just Now</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb"><i class="ti-comments-smiley btn-info"></i></div>
-                                        <div class="notify-text">
-                                            <p>New Commetns On Post</p>
-                                            <span>30 Seconds ago</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb"><i class="ti-key btn-primary"></i></div>
-                                        <div class="notify-text">
-                                            <p>Some special like you</p>
-                                            <span>Just Now</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb"><i class="ti-comments-smiley btn-info"></i></div>
-                                        <div class="notify-text">
-                                            <p>New Commetns On Post</p>
-                                            <span>30 Seconds ago</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb"><i class="ti-key btn-primary"></i></div>
-                                        <div class="notify-text">
-                                            <p>Some special like you</p>
-                                            <span>Just Now</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb"><i class="ti-key btn-danger"></i></div>
-                                        <div class="notify-text">
-                                            <p>You have Changed Your Password</p>
-                                            <span>Just Now</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb"><i class="ti-key btn-danger"></i></div>
-                                        <div class="notify-text">
-                                            <p>You have Changed Your Password</p>
-                                            <span>Just Now</span>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="dropdown">
-                            <i class="fa fa-envelope-o dropdown-toggle" data-toggle="dropdown"><span>3</span></i>
-                            <div class="dropdown-menu notify-box nt-enveloper-box">
-                                <span class="notify-title">You have 3 new notifications <a href="#">view all</a></span>
-                                <div class="nofity-list">
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb">
-                                            <img src="assets/images/author/author-img1.jpg" alt="image">
-                                        </div>
-                                        <div class="notify-text">
-                                            <p>Aglae Mayer</p>
-                                            <span class="msg">Hey I am waiting for you...</span>
-                                            <span>3:15 PM</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb">
-                                            <img src="assets/images/author/author-img2.jpg" alt="image">
-                                        </div>
-                                        <div class="notify-text">
-                                            <p>Aglae Mayer</p>
-                                            <span class="msg">When you can connect with me...</span>
-                                            <span>3:15 PM</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb">
-                                            <img src="assets/images/author/author-img3.jpg" alt="image">
-                                        </div>
-                                        <div class="notify-text">
-                                            <p>Aglae Mayer</p>
-                                            <span class="msg">I missed you so much...</span>
-                                            <span>3:15 PM</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb">
-                                            <img src="assets/images/author/author-img4.jpg" alt="image">
-                                        </div>
-                                        <div class="notify-text">
-                                            <p>Aglae Mayer</p>
-                                            <span class="msg">Your product is completely Ready...</span>
-                                            <span>3:15 PM</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb">
-                                            <img src="assets/images/author/author-img2.jpg" alt="image">
-                                        </div>
-                                        <div class="notify-text">
-                                            <p>Aglae Mayer</p>
-                                            <span class="msg">Hey I am waiting for you...</span>
-                                            <span>3:15 PM</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb">
-                                            <img src="assets/images/author/author-img1.jpg" alt="image">
-                                        </div>
-                                        <div class="notify-text">
-                                            <p>Aglae Mayer</p>
-                                            <span class="msg">Hey I am waiting for you...</span>
-                                            <span>3:15 PM</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="notify-item">
-                                        <div class="notify-thumb">
-                                            <img src="assets/images/author/author-img3.jpg" alt="image">
-                                        </div>
-                                        <div class="notify-text">
-                                            <p>Aglae Mayer</p>
-                                            <span class="msg">Hey I am waiting for you...</span>
-                                            <span>3:15 PM</span>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="settings-btn">
-                            <i class="ti-settings"></i>
-                        </li>
                     </ul>
                 </div>
             </div>
@@ -223,22 +83,31 @@ body {font-family: Arial, Helvetica, sans-serif;}
                 <div class="col-12 mt-5">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="header-title">Progress Table</h4>
+                            <h4 class="header-title">{{date('d/m/Y, h:i:sa')}}</h4>
                             <div class="single-table">
                                 <div class="table-responsive">
                                     <table class="table table-hover progress-table text-center">
                                         <thead class="text-uppercase">
                                             <tr>
-                                                <th scope="col">ID</th>
-                                                <th scope="col">Suplier</th>
-                                                <th scope="col">Total Harga</th>
+                                                <th scope="col">No</th>
+                                                <th scope="col">ID Barang</th>
                                                 <th scope="col">Barang</th>
-                                                <th scope="col">status</th>
-                                                <th scope="col">action</th>
+                                                <th scope="col">Lokasi</th>
+                                                <th scope="col">Sub Lokasi</th>
+                                                <th scope="col">Ketersediaan</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            
+                                            @foreach($stok as $key => $s)
+                                            <tr>
+                                                <td>{{$key+1}}</td>
+                                                <td>{{$s->barang_id}}</td>
+                                                <td>{{$s->barang}}</td>
+                                                <td>{{$s->lokasi}}</td>
+                                                <td>{{$s->sub_lokasi}}</td>
+                                                <td>{{$s->ketersediaan}}</td>
+                                            </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -247,55 +116,6 @@ body {font-family: Arial, Helvetica, sans-serif;}
                     </div>
                 </div>
                 <!-- Progress Table end -->
-                <!-- Button trigger modal -->
-                <div id="myModal" class="modal row">
-                    <!-- Modal content -->
-                    <div class="modal-content col-md-6">
-                        <div class="row">
-                            <div class="col-md-12 align-right">
-                                <span class="close" id="close-modal-status">&times;</span>
-                            </div>
-                        </div>
-                        <h4>Simpan perubahan?</h4>
-                        <div class="row">
-                            <div class="col-md-6 align-right"></div>
-                            <div class="col-md-3 align-right">
-                                <button class="btn btn-danger" id="modal-no" style="width:75%;">Tidak</button>
-                            </div>
-                            <div class="col-md-3">
-                                <button class="btn btn-success" id="modal-yes" style="width:75%;">Ya</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="modal-barang" class="modal row">
-                    <!-- Modal content -->
-                    <div class="modal-content col-md-6">
-                        <div class="row">
-                            <div class="col-md-12 align-right">
-                                <span class="close" id="close-modal-barang">&times;</span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Barang</th>
-                                            <th>Qty</th>
-                                            <th>Harga</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="table-barang">
-                                        
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
