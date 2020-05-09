@@ -75,7 +75,7 @@ class PenjualanController extends Controller
         if (count(Penjualan::get()) == 0) {
             $data['new_id'] = 1;
         } else {
-            $data['new_id'] = end($penjualans)[0]->id + 1;
+            $data['new_id'] = Penjualan::orderBy('created_at', 'desc')->first()->id + 1;
         }
         $data['pelanggans'] = Pelanggan::get();
         $data['saleses'] = Sales::get();
