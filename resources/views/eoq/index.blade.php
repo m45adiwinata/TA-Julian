@@ -75,6 +75,27 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                     </div>
                                 </div>
                             </div>
+                            <div class="single-table">
+                                <div class="table-responsive">
+                                    <table class="table table-hover progress-table text-center">
+                                        <thead class="text-uppercase">
+                                            <tr>
+                                                <th scope="col">No</th>
+                                                <th scope="col">ID</th>
+                                                <th scope="col">Nama Barang</th>
+                                                <th scope="col">Satuan</th>
+                                                <th scope="col">Harga Beli</th>
+                                                <th scope="col">Harga Jual</th>
+                                                <th scope="col">Terjual</th>
+                                                <th scope="col">EOQ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbl-body">
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -94,7 +115,21 @@ body {font-family: Arial, Helvetica, sans-serif;}
             var tanggal1 = $('#tanggal1').val();
             var tanggal2 = $('#tanggal2').val();
             $.get('/eoq/get-data-penjualan/'+tanggal1+'/'+tanggal2, function(data) {
-                console.log(data);
+                $('#tbl-body').html('');
+                $.each(data, function(key, value) {
+                    $('#tbl-body').append(
+                        '<tr>'+
+                            '<td>'+(key+1)+'</td>'+
+                            '<td>'+value.id+'</td>'+
+                            '<td>'+value.nama+'</td>'+
+                            '<td>'+value.satuan_str+'</td>'+
+                            '<td>'+value.harga+'</td>'+
+                            '<td>'+value.harga_jual+'</td>'+
+                            '<td>'+value.unit_terjual+'</td>'+
+                            '<td>'+value.eoq+'</td>'+
+                        '</tr>'
+                    );
+                });
             });
         });
     });

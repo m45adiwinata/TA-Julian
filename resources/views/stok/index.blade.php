@@ -83,6 +83,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
                 <div class="col-12 mt-5">
                     <div class="card">
                         <div class="card-body">
+                            @php date_default_timezone_set("Asia/Makassar"); @endphp
                             <h4 class="header-title">{{date('d/m/Y, h:i:sa')}}</h4>
                             <div class="single-table">
                                 <div class="table-responsive">

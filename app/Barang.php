@@ -10,7 +10,7 @@ class Barang extends Model
 
     public function satuan()
     {
-        return $this->hasOne('App\Satuan');
+        return $this->belongsTo('App\Satuan');
     }
 
     public function stok()
