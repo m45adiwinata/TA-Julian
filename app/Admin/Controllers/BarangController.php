@@ -47,6 +47,8 @@ class BarangController extends AdminController
                 return null;
             }
         });
+        $grid->column('b_pengiriman', __('Pengiriman'));
+        $grid->column('b_keamanan', __('Keamanan'));
         // $grid->column('created_at', __('Created at'));
         // $grid->column('updated_at', __('Updated at'));
 
@@ -69,6 +71,8 @@ class BarangController extends AdminController
         $show->field('harga_jual', __('Harga Jual'));
         $show->field('satuan_id', __('Satuan id'));
         $show->field('jumlah_unit', __('Jumlah Unit'));
+        $show->field('b_pengiriman', __('Pengiriman'));
+        $show->field('b_keamanan', __('Keamanan'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -94,6 +98,8 @@ class BarangController extends AdminController
         $form->select('parent_id', 'Parent Barang')->options(
             Barang::where('satuan_id', 1)->get()->pluck('nama', 'id')
         );
+        $form->currency('b_pengiriman', __('Pengiriman'))->symbol('Rp');
+        $form->currency('b_keamanan', __('Keamanan'))->symbol('Rp');
 
         return $form;
     }
