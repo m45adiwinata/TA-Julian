@@ -88,6 +88,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                                 <th scope="col">Harga Jual</th>
                                                 <th scope="col">Terjual</th>
                                                 <th scope="col">EOQ</th>
+                                                <th scope="col">Jml. Order<br>(kali)</br></th>
                                             </tr>
                                         </thead>
                                         <tbody id="tbl-body">
@@ -127,6 +128,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
                             '<td>'+value.harga_jual+'</td>'+
                             '<td>'+value.unit_terjual+'</td>'+
                             '<td>'+value.eoq+'</td>'+
+                            '<td>'+value.pengulangan+'</td>'+
                         '</tr>'
                     );
                 });

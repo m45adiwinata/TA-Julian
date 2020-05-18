@@ -108,10 +108,12 @@ class EoqController extends Controller
         }
         foreach ($totalunits as $key => $total) {
             if ($total->unit_terjual > 0) {
-                $total->eoq = sqrt(2 * $total->unit_terjual * ($total->harga/140434860 * 8000000) / ($total->harga / 140434860 * 3000000));
+                $total->eoq = sqrt(2 * $total->unit_terjual * ($total->harga/140434860 * 8000000) / ($total->harga / 140434860 * 6000000));
+                $total->pengulangan = ceil($total->unit_terjual / $total->eoq);
             }
             else {
                 $total->eoq = 0;
+                $total->pengulangan = 0;
             }
             $total->eoq = number_format($total->eoq, 2, ',', '.');
             $total->satuan_str = $total->satuan()->first()->nama;
