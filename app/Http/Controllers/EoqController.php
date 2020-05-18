@@ -115,7 +115,9 @@ class EoqController extends Controller
                 $total->eoq = 0;
                 $total->pengulangan = 0;
             }
-            $total->eoq = number_format($total->eoq, 2, ',', '.');
+            $total->eoq *= $total->pengulangan;
+            $total->eoq = intval($total->eoq);
+            // $total->eoq = number_format($total->eoq, 2, ',', '.');
             $total->satuan_str = $total->satuan()->first()->nama;
         }
 

@@ -22,7 +22,7 @@
                     @else
                     <li>
                     @endif
-                        <a href="eoq" aria-expanded="true"><i class="fa fa-balance-scale"></i><span>EOQ</span></a>
+                        <a href="eoq" aria-expanded="true"><i class="fa fa-balance-scale"></i><span>Rekomendasi Jml. Barang</span></a>
                     </li>
                     @if($page == 'data_penjualan' || $page == 'buat_penjualan')
                     <li class="active">
