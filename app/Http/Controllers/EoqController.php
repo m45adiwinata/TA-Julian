@@ -106,6 +106,11 @@ class EoqController extends Controller
                 }
             }
         }
+        foreach ($data as $key => $value) {
+            foreach ($value->barangTerpecah()->get() as $key => $bt) {
+                $total->unit_terjual += $bt->jml_terpecah;
+            }
+        }
         foreach ($totalunits as $key => $total) {
             if ($total->unit_terjual > 0) {
                 $total->eoq = sqrt(2 * $total->unit_terjual * ($total->harga/140434860 * 8000000) / ($total->harga / 140434860 * 6000000));
