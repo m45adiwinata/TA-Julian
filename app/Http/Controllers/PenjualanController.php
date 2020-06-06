@@ -9,6 +9,7 @@ use App\Barang;
 use App\BarangPenjualan;
 use App\Status;
 use App\SubLokasi;
+use App\BarangTerpecah;
 use Auth;
 use Illuminate\Http\Request;
 use PDF;
@@ -302,6 +303,11 @@ class PenjualanController extends Controller
                             $stok_barang = $barang->stok()->first();
                             $parent_barang = $barang->parent()->first();
                             $jml_dibutuhkan = ceil($jumlah / $parent_barang->jumlah_unit);
+                            $bt = new BarangTerpecah;
+                            $bt->penjualan_id = $id;
+                            $bt->barang_id = $barang_id;
+                            $bt->jml_terpecah = $jml_dibutuhkan;
+                            $bt->save();
                             foreach ($parent_barang->stok()->get() as $key => $stok_parent) {
                                 if ($stok_parent->ketersediaan >= $jml_dibutuhkan) {
                                     $stok_parent->ketersediaan -= $jml_dibutuhkan;

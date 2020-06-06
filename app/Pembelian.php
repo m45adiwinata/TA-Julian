@@ -27,4 +27,11 @@ class Pembelian extends Model
     {
         return $this->hasMany('App\BarangPembelian');
     }
+
+    public static function boot() {
+        parent::boot();
+        self::deleting(function($pembelian) {
+             $pembelian->barangPembelian()->delete();
+        });
+    }
 }

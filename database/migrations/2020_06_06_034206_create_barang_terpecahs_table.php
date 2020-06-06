@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddPengirimanKeamananColumn extends Migration
+class CreateBarangTerpecahsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class AddPengirimanKeamananColumn extends Migration
      */
     public function up()
     {
-        Schema::table('barang', function (Blueprint $table) {
-            $table->double('b_pengiriman')->nullable();
-            $table->double('b_keamanan')->nullable();
+        Schema::create('barang_terpecahs', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->integer('penjualan_id');
+            $table->integer('barang_id');
+            $table->integer('jml_terpecah');
         });
     }
 
@@ -26,8 +28,6 @@ class AddPengirimanKeamananColumn extends Migration
      */
     public function down()
     {
-        Schema::table('barang', function (Blueprint $table) {
-            $table->dropColumn(['b_pengiriman', 'b_keamanan']);
-        });
+        Schema::dropIfExists('barang_terpecahs');
     }
 }

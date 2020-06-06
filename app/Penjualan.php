@@ -27,4 +27,17 @@ class Penjualan extends Model
     {
     	return $this->belongsTo('App\Sales');
     }
+
+    public function barangTerpecah()
+    {
+        return $this->hasMany('App\BarangTerpecah');
+    }
+
+    public static function boot() {
+        parent::boot();
+        self::deleting(function($penjualan) {
+             $penjualan->barangPenjualan()->delete();
+             $penjualan->barangTerpecah()->delete();
+        });
+    }
 }
