@@ -9,6 +9,7 @@
         <div class="menu-inner">
             <nav>
                 <ul class="metismenu" id="menu">
+                    @if(Auth::user()->name == 'manager')
                     <li{{$page == 'home' ? ' class=active' : ''}}>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-dashboard"></i><span>dashboard</span></a>
                         <ul class="collapse">
@@ -24,6 +25,7 @@
                     @endif
                         <a href="eoq" aria-expanded="true"><i class="fa fa-balance-scale"></i><span>Rekomendasi Jml. Barang</span></a>
                     </li>
+                    @endif
                     @if($page == 'data_penjualan' || $page == 'buat_penjualan')
                     <li class="active">
                     @else
@@ -35,6 +37,7 @@
                             <li{{$page == 'buat_penjualan' ? ' class=active' : ''}}><a href="{{route('penjualan.create')}}">Buat Penjualan</a></li>
                         </ul>
                     </li>
+                    @if(Auth::user()->name == 'manager')
                     @if($page == 'data_pembelian' || $page == 'buat_pembelian')
                     <li class="active">
                     @else
@@ -47,6 +50,7 @@
                             <li{{$page == 'buat_pembelian' ? ' class=active' : ''}}><a href="/pembelian/create">Buat Pembelian</a></li>
                         </ul>
                     </li>
+                    @endif
                     @if($page == 'stok')
                     <li class="active">
                     @else

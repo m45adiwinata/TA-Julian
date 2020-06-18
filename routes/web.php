@@ -13,6 +13,7 @@
 
 Route::get('/login', 'UserLogController@index');
 Route::post('/login', 'UserLogController@login');
+Route::get('/logout', 'UserLogController@logout');
 Route::get('/', 'HomeController@index');
 Route::get('/get-penjualan-pembelian/{start}/{end}', 'HomeController@getPenjualanPembelianNHari');
 Route::get('/get-penjualan-pembelian/{date}', 'HomeController@getPenjualanPembelian1Hari');

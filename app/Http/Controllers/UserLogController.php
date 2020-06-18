@@ -28,4 +28,11 @@ class UserLogController extends Controller
             return redirect('/login')->with('fail', 'Username dan password salah.');
         }
     }
+
+    public function logout()
+    {
+        Auth::logout();
+        
+        return redirect('/');
+    }
 }

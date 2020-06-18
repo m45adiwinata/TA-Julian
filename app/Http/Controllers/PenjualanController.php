@@ -27,6 +27,7 @@ class PenjualanController extends Controller
             return redirect('/login');
         }
         // setcookie("per_page", "", time() - 3600);
+        dd($_COOKIE);
         if ($request->query('per_page')) {
             $data['penjualans'] = Penjualan::paginate($request->query('per_page'));
             setcookie("per_page", $request->query('per_page'));
