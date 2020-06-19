@@ -37,7 +37,6 @@
                             <li{{$page == 'buat_penjualan' ? ' class=active' : ''}}><a href="{{route('penjualan.create')}}">Buat Penjualan</a></li>
                         </ul>
                     </li>
-                    @if(Auth::user()->name == 'manager')
                     @if($page == 'data_pembelian' || $page == 'buat_pembelian')
                     <li class="active">
                     @else
@@ -50,7 +49,6 @@
                             <li{{$page == 'buat_pembelian' ? ' class=active' : ''}}><a href="/pembelian/create">Buat Pembelian</a></li>
                         </ul>
                     </li>
-                    @endif
                     @if($page == 'stok')
                     <li class="active">
                     @else
