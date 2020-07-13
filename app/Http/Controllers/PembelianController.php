@@ -14,6 +14,7 @@ use Session;
 use Auth;
 use Illuminate\Http\Request;
 use PDF;
+use DateTime;
 
 class PembelianController extends Controller
 {
@@ -24,6 +25,7 @@ class PembelianController extends Controller
      */
     public function index(Request $request)
     {
+        date_default_timezone_set('Asia/Makassar');
         if(!Auth::check()) {
             return redirect('/login');
         }
@@ -68,6 +70,7 @@ class PembelianController extends Controller
      */
     public function create()
     {
+        date_default_timezone_set('Asia/Makassar');
         $pembelians = Pembelian::get();
         if (count($pembelians) == 0) {
             $data['new_id'] = 1;
@@ -95,6 +98,7 @@ class PembelianController extends Controller
      */
     public function store(Request $request)
     {
+        date_default_timezone_set('Asia/Makassar');
         $this->validate($request, [
             'suplier' => 'required',
         ]);
@@ -108,7 +112,7 @@ class PembelianController extends Controller
         $data->status_id = 1;
         $data->diskon = $request->diskon;
         $data->type_diskon_id = $request->type_diskon;
-        $data->created_at = $request->created_at;
+        $data->created_at = $dt->format($request->date." ".$request->time.":00");
         $data->save();
         foreach ($request->barang as $key => $barang_id) {
             $barang = new BarangPembelian;
@@ -141,6 +145,7 @@ class PembelianController extends Controller
      */
     public function edit(Pembelian $pembelian)
     {
+        date_default_timezone_set('Asia/Makassar');
         $data['pembelian'] = $pembelian;
         $data['supliers'] = Suplier::get();
         $data['barangs'] = Barang::get();
@@ -168,6 +173,7 @@ class PembelianController extends Controller
      */
     public function update(Request $request, Pembelian $pembelian)
     {
+        date_default_timezone_set('Asia/Makassar');
         foreach ($request->qty as $key => $value) {
             if($value < 1) {
                 return redirect('pembelian/create')->with('danger', 'Kuantitas harus lebih dari atau sama dengan 1.');
@@ -179,6 +185,7 @@ class PembelianController extends Controller
         $pembelian->status_id = 1;
         $pembelian->diskon = $request->diskon;
         $pembelian->type_diskon_id = $request->type_diskon;
+        $data->created_at = $dt->format($request->date." ".$request->time.":00");
         $pembelian->save();
         foreach ($request->barang as $key => $barang_id) {
             $barang = new BarangPembelian;

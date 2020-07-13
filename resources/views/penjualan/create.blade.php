@@ -98,7 +98,6 @@
                                             <ul class="invoice-date">
                                                 <li>Tanggal : <input type="date" name="date"></li>
                                                 <li>Jam : <input type="time" name="time" value="{{date('H:i')}}"></li>
-                                                <!-- <li>Due Date : sat 18 | 07 | 2018</li> -->
                                             </ul>
                                         </div>
                                     </div>
