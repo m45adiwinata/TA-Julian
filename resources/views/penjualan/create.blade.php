@@ -96,7 +96,8 @@
                                         </div>
                                         <div class="col-md-6 text-md-right">
                                             <ul class="invoice-date">
-                                                <li>Tanggal Penjualan : <input type="date" name="created_at"></li>
+                                                <li>Tanggal : <input type="date" name="date"></li>
+                                                <li>Jam : <input type="time" name="time" value="{{date('H:i')}}"></li>
                                                 <!-- <li>Due Date : sat 18 | 07 | 2018</li> -->
                                             </ul>
                                         </div>

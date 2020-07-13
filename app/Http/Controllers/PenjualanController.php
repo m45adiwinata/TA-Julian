@@ -13,6 +13,7 @@ use App\BarangTerpecah;
 use Auth;
 use Illuminate\Http\Request;
 use PDF;
+use DateTime;
 
 class PenjualanController extends Controller
 {
@@ -23,6 +24,7 @@ class PenjualanController extends Controller
      */
     public function index(Request $request)
     {
+        date_default_timezone_set('Asia/Makassar');
         if(!Auth::check()) {
             return redirect('/login');
         }
@@ -69,6 +71,7 @@ class PenjualanController extends Controller
      */
     public function create()
     {
+        date_default_timezone_set('Asia/Makassar');
         if(!Auth::check()) {
             return redirect('/login');
         }
@@ -99,11 +102,19 @@ class PenjualanController extends Controller
     {
         $this->validate($request, [
             'pelanggan_id' => 'required',
-            'sales_id' => 'required'
+            'sales_id' => 'required',
+            'date' => 'required',
+            'time' => 'required'
         ]);
+        date_default_timezone_set('Asia/Makassar');
+        $dt = new DateTime;
         // dd($request);
+        // echo(date('Y-m-d H:i:s')."<br>");
+        // echo($dt->format($request->created_at." ".date('H:i:s')));
+        // dd($dt->format($request->created_at." ".date('H:i:s')));
         $data = new Penjualan;
-        $data->created_at = $request->created_at." ".date('h:i:s');
+        // $data->created_at = $dt->format($request->created_at." ".date('H:i:s'));
+        $data->created_at = $dt->format($request->date." ".$request->time.":00");
         $data->pelanggan_id = $request->pelanggan_id;
         $data->sales_id = $request->sales_id;
         $data->diskon = $request->diskon;
@@ -139,6 +150,7 @@ class PenjualanController extends Controller
      */
     public function edit(Penjualan $penjualan)
     {
+        date_default_timezone_set('Asia/Makassar');
         if(!Auth::check()) {
             return redirect('/login');
         }
@@ -168,6 +180,7 @@ class PenjualanController extends Controller
      */
     public function update(Request $request, Penjualan $penjualan)
     {
+        date_default_timezone_set('Asia/Makassar');
         foreach ($penjualan->barangPenjualan()->get() as $key => $jual) {
             if ($jual->status_id == 2) {
                 $barang = $jual->barang()->first();
@@ -199,12 +212,13 @@ class PenjualanController extends Controller
                 }
             }
         }
+        $dt = new DateTime;
         $penjualan->barangPenjualan()->delete();
         $penjualan->pelanggan_id = $request->pelanggan_id;
         $penjualan->sales_id = $request->sales_id;
         $penjualan->diskon = $request->diskon;
         $penjualan->type_diskon = $request->type_diskon;
-        $penjualan->created_at = $request->created_at;
+        $penjualan->created_at = $dt->format($request->date." ".$request->time.":00");
         $penjualan->save();
         foreach ($request->barang as $key => $barang_id) {
             $barang = new BarangPenjualan;

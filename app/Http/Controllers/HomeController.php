@@ -25,6 +25,7 @@ class HomeController extends Controller
         $data['sub_link'] = '/';
         $labels = array();
         $jml_penjualan = array();
+        // dd(Penjualan::whereDate('created_at', date('Y-m-d'))->whereTime('created_at', '>=', '10'.':00:00')->whereTime('created_at', '<', '11'.':00:00')->get());
         for ($i=9; $i < 18; $i++) { 
             $temp = $i;
             $temp2 = $i+1;
@@ -39,8 +40,10 @@ class HomeController extends Controller
                     $total += $bp->harga_jual;
                 }
             }
+            // echo($total."<br>");
             array_push($jml_penjualan, intval($total));
         }
+        // dd($jml_penjualan);
         $jml_pembelian = array();
         for ($i=9; $i < 18; $i++) { 
             $temp = $i;
@@ -162,7 +165,7 @@ class HomeController extends Controller
                 $temp2 = '0'.$temp2;
             }
             $total = 0;
-            foreach (Pembelian::whereDate('created_at', date('Y-m-d', strtotime($date)))->whereTime('created_at', '>=', $temp.':00:00')->whereTime('created_at', '<', $temp2.':00:00')->where('status_id', 2)->get() as $key => $value) {
+            foreach (Pembelian::where('status_id', 2)->whereDate('created_at', date('Y-m-d', strtotime($date)))->whereTime('created_at', '>=', $temp.':00:00')->whereTime('created_at', '<', $temp2.':00:00')->get() as $key => $value) {
                 $bps = $value->barangPembelian()->get();
                 foreach ($bps as $key => $bp) {
                     $total += $bp->harga_beli;
@@ -180,6 +183,9 @@ class HomeController extends Controller
 
     public function getPenjualanPembelianNHari($start, $end)
     {
+        $temp = new DateTime($end);
+        $temp->modify('+1 day');
+        $end = $temp->format('Y-m-d');
         $period = new DatePeriod(
             new DateTime($start),
             new DateInterval('P1D'),
@@ -200,7 +206,7 @@ class HomeController extends Controller
         $jml_pembelian = array();
         foreach($period as $p) { 
             $total = 0;
-            foreach (Pembelian::whereDate('created_at', $p)->get() as $key => $value) {
+            foreach (Pembelian::whereDate('created_at', $p)->where('status_id', 2)->get() as $key => $value) {
                 $bps = $value->barangPembelian()->get();
                 foreach ($bps as $key => $bp) {
                     $total += $bp->harga_beli;
@@ -218,17 +224,47 @@ class HomeController extends Controller
 
     public function getPenjualanPembelianLifetime()
     {
-        $temp = Pembelian::first()->created_at;
-        $temp2 = Penjualan::first()->created_at;
+        $temp2 = NULL;
+        foreach (Penjualan::get() as $key => $p) {
+            $flagdone = FALSE;
+            foreach ($p->barangPenjualan()->get() as $key => $bp) {
+                if ($bp->status_id == 2) {
+                    $temp2 = $p;
+                    $flagdone = TRUE;
+                break;
+                }
+            }
+            if ($flagdone == TRUE) {
+            break;
+            }
+        }
+        $temp = Pembelian::where('status_id', 2)->first()->created_at;
+        // $temp2 = Penjualan::first()->created_at;
         $temp < $temp2 ? $start = date('Y-m-d', strtotime($temp)) : $start = date('Y-m-d', strtotime($temp2));
-        $temp = Pembelian::orderBy('created_at', 'desc')->first()->created_at;
-        $temp2 = Penjualan::orderBy('created_at', 'desc')->first()->created_at;
+        
+        $temp2 = NULL;
+        foreach (Penjualan::orderBy('created_at', 'desc')->get() as $key => $p) {
+            $flagdone = FALSE;
+            foreach ($p->barangPenjualan()->get() as $key => $bp) {
+                if ($bp->status_id == 2) {
+                    $temp2 = $p;
+                    $flagdone = TRUE;
+                break;
+                }
+            }
+            if ($flagdone == TRUE) {
+            break;
+            }
+        }
+        $temp = Pembelian::where('status_id', 2)->orderBy('created_at', 'desc')->first()->created_at;
+        // $temp2 = Penjualan::orderBy('created_at', 'desc')->first()->created_at;
         $temp > $temp2 ? $end = date('Y-m-d', strtotime($temp)) : $end = date('Y-m-d', strtotime($temp2));
         $period = new DatePeriod(
             new DateTime($start),
             new DateInterval('P1D'),
             new DateTime($end)
         );
+        
         $labels = array();
         $jml_penjualan = array();
         foreach($period as $p) { 
@@ -244,7 +280,7 @@ class HomeController extends Controller
         $jml_pembelian = array();
         foreach($period as $p) { 
             $total = 0;
-            foreach (Pembelian::whereDate('created_at', $p)->get() as $key => $value) {
+            foreach (Pembelian::where('status_id', 2)->whereDate('created_at', $p)->get() as $key => $value) {
                 $bps = $value->barangPembelian()->get();
                 foreach ($bps as $key => $bp) {
                     $total += $bp->harga_beli;
@@ -264,10 +300,10 @@ class HomeController extends Controller
     {
         $sales = Sales::get();
         foreach ($sales as $key => $s) {
-            $sales->total_jual = 0;
+            $s->total_jual = 0;
             foreach ($s->penjualan()->whereDate('created_at', '>=', $start)->whereDate('created_at', '<=', $end)->get() as $key => $p) {
                 $total = 0;
-                foreach ($p->barangPenjualan()->get() as $key => $bp) {
+                foreach ($p->barangPenjualan()->where('status_id', 2)->get() as $key => $bp) {
                     $total += $bp->harga_jual;
                 }
                 if ($p->type_diskon == 0) {

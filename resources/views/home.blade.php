@@ -78,7 +78,7 @@
                                     <button id="procceed-0">Procceed</button>
                                 </div>
                                 <select class="custome-select border-0 pr-3" id="timerange-0">
-                                    <option selected value="0">Last 24 Hours</option>
+                                    <option selected value="0">Today</option>
                                     <option value="1">Last Week</option>
                                     <option value="2">Last Month</option>
                                     <option value="3">Last Year</option>
@@ -527,7 +527,7 @@
                 if (endDate < 10) {
                     endDate = '0' + endDate;
                 }
-                let endMonth = date.getMonth();
+                let endMonth = date.getMonth() + 1;
                 if (endMonth < 10) {
                     endMonth = '0' + endMonth;
                 }
@@ -542,16 +542,13 @@
                 if (endDate < 10) {
                     endDate = '0' + endDate;
                 }
-                let endMonth = date.getMonth();
+                let endMonth = date.getMonth()  + 1;
                 if (endMonth < 10) {
                     endMonth = '0' + endMonth;
                 }
                 let end = date.getFullYear() + '-' + endMonth + '-' + endDate;
-                var last = new Date(date.getTime() - (7 * 24 * 60 * 60 * 1000));
-                var day = last.getDate();
-                var month = last.getMonth()+1;
-                var year = last.getFullYear();
-                let lastMonth = last.getMonth();
+                var last = new Date(date.getTime() - (6 * 24 * 60 * 60 * 1000));
+                let lastMonth = last.getMonth()+1;
                 if (lastMonth < 10) {
                     lastMonth = '0' + lastMonth;
                 }
@@ -570,16 +567,13 @@
                 if (endDate < 10) {
                     endDate = '0' + endDate;
                 }
-                let endMonth = date.getMonth();
+                let endMonth = date.getMonth() + 1;
                 if (endMonth < 10) {
                     endMonth = '0' + endMonth;
                 }
                 let end = date.getFullYear() + '-' + endMonth + '-' + endDate;
                 var last = new Date(date.getTime() - (30 * 24 * 60 * 60 * 1000));
-                var day = last.getDate();
-                var month = last.getMonth()+1;
-                var year = last.getFullYear();
-                let lastMonth = last.getMonth();
+                let lastMonth = last.getMonth()+1;
                 if (lastMonth < 10) {
                     lastMonth = '0' + lastMonth;
                 }
@@ -598,16 +592,13 @@
                 if (endDate < 10) {
                     endDate = '0' + endDate;
                 }
-                let endMonth = date.getMonth();
+                let endMonth = date.getMonth()+1;
                 if (endMonth < 10) {
                     endMonth = '0' + endMonth;
                 }
                 let end = date.getFullYear() + '-' + endMonth + '-' + endDate;
                 var last = new Date(date.getTime() - (365 * 24 * 60 * 60 * 1000));
-                var day = last.getDate();
-                var month = last.getMonth()+1;
-                var year = last.getFullYear();
-                let lastMonth = last.getMonth();
+                let lastMonth = last.getMonth()+1;
                 if (lastMonth < 10) {
                     lastMonth = '0' + lastMonth;
                 }
@@ -629,16 +620,23 @@
         });
         $('#procceed-0').click(function() {
             if($('#date_start-0').val() && $('#date_end-0').val()) {
-                if($('#date_start-0').val() < $('#date_end-0').val()) {
-                    $.get('/get-penjualan-pembelian/'+$('#date_start-0').val()+'/'+$('#date_end-0').val(), function(data) {
-                        renderGrafikPenjualanPembelian(data.jml_penjualan, data.jml_pembelian, data.labels);
-                    });
+                if($('#date_start-0').val() <= $('#date_end-0').val()) {
+                    if($('#date_start-0').val() == $('#date_end-0').val()) {
+                        $.get('/get-penjualan-pembelian/'+$('#date_end-0').val(), function(data) {
+                            renderGrafikPenjualanPembelian(data.jml_penjualan, data.jml_pembelian, data.labels);
+                        });
+                    }
+                    else {
+                        $.get('/get-penjualan-pembelian/'+$('#date_start-0').val()+'/'+$('#date_end-0').val(), function(data) {
+                            renderGrafikPenjualanPembelian(data.jml_penjualan, data.jml_pembelian, data.labels);
+                        });
+                    }
                 }
             }
         });
         $('#procceed-1').click(function() {
             if($('#date_start-1').val() && $('#date_end-1').val()) {
-                if($('#date_start-1').val() < $('#date_end-1').val()) {
+                if($('#date_start-1').val() <= $('#date_end-1').val()) {
                     $.get('get-penjualan-sales/'+$('#date_start-1').val()+'/'+$('#date_end-1').val(), function(data) {
                         renderGrafikPenjualanSales(data);
                     });
@@ -668,6 +666,7 @@
         });
     });
     function renderGrafikPenjualanSales(data) {
+        console.log(data);
         if ($('#coin_distribution').length) {
             zingchart.THEME = "classic";
             var myConfig = {
@@ -798,6 +797,7 @@
         }
     }
     function renderGrafikPenjualanPembelian(v0, v1, labels) {
+        // console.log(v0);
         var myConfig = {
             "type": "line",
             "scale-x": { //X-Axis
