@@ -25,7 +25,7 @@ class HistPenjualanController extends Controller
             }
         }
         $total = 0;
-        $data['penjualans2'] = Penjualan::get();
+        $data['penjualans2'] = Penjualan::orderBy('created_at')->get();
         foreach ($data['penjualans2'] as $key => $p) {
             foreach ($p->barangPenjualan()->get() as $key => $bp) {
                 if ($bp->status_id == 2) {
@@ -69,7 +69,7 @@ class HistPenjualanController extends Controller
                 }
             }
         }
-        $data['penjualans2'] = Penjualan::whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $data['penjualans2'] = Penjualan::whereBetween('created_at', [$tgl1, $tgl2])->orderBy('created_at')->get();
         $data['total'] = number_format($total, 2, ',', '.');
 
         return $data;

@@ -259,6 +259,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
             var tgl1 = $('#tanggal1').val();
             var tgl2 = $('#tanggal2').val();
             $.get('/history-pembelian/get-data/'+tgl1+'/'+tgl2, function(data) {
+                $('#total-pembelians').html('Rp ' + data.total);
                 if ($('#coin_salesx').length) {
                     // var ctx = document.getElementById("coin_salesx").getContext('2d');
                     var lbls = [];
@@ -272,7 +273,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
                     chart.update();
                 }
                 $('#main-tbl-body').html('');
-                $.each(data.pembelians, function(key, value) {
+                $.each(data.pembelians2, function(key, value) {
                     $('#main-tbl-body').append(
                         '<tr>'+
                             '<th scope="row">'+(key+1)+'</th>'+
