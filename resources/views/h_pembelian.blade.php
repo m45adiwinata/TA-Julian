@@ -251,7 +251,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
 @section('script')
 <script>
     var idPemb;
-    var dataPembelian = <?php echo($pembelians) ?>;
+    var dataPembelian = <?php echo($pembelians2) ?>;
     var chart;
     var ctx;
     $(document).ready(function() {

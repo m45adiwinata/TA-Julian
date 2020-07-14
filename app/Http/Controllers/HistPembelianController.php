@@ -37,6 +37,24 @@ class HistPembelianController extends Controller
             }
             $total += $temptotal;
         }
+        foreach ($data['pembelians2'] as $key => $pembelian) {
+            $pembelian->status = Status::find($pembelian->status_id)->nama;
+            $pembelian->barangs = $pembelian->barangPembelian()->get();
+            $temptotal = 0;
+            foreach ($pembelian->barangs as $key => $barang) {
+                $temp = $barang->barang()->first();
+                $barang->nama = $temp->nama;
+                $barang->harga = $temp->harga;
+                $barang->qty = $barang->harga_beli / $temp->harga;
+                $temptotal += $barang->harga_beli;
+            }
+            if ($pembelian->type_diskon_id == 1) {
+            	$diskon = $temptotal * $diskon / 100;
+            } else {
+            	$temptotal -= $pembelian->diskon;
+            }
+            $total += $temptotal;
+        }
         $data['total'] = $total;
         $data['statuses'] = Status::get();
         $data['page'] = 'history_pembelian';
