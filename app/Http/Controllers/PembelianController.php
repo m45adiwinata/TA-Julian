@@ -107,6 +107,7 @@ class PembelianController extends Controller
                 return redirect('pembelian/create')->with('danger', 'Kuantitas harus lebih dari atau sama dengan 1.');
             }
         }
+        $dt = new DateTime;
         $data = new Pembelian;
         $data->suplier_id = $request->suplier;
         $data->status_id = 1;
@@ -179,13 +180,14 @@ class PembelianController extends Controller
                 return redirect('pembelian/create')->with('danger', 'Kuantitas harus lebih dari atau sama dengan 1.');
             }
         }
-        // dd($pembelian);
+        // dd($request->time);
+        $dt = new DateTime;
         $pembelian->barangPembelian()->delete();
         $pembelian->suplier_id = $request->suplier;
         $pembelian->status_id = 1;
         $pembelian->diskon = $request->diskon;
         $pembelian->type_diskon_id = $request->type_diskon;
-        $data->created_at = $dt->format($request->date." ".$request->time.":00");
+        $pembelian->created_at = $dt->format($request->date." ".$request->time.":00");
         $pembelian->save();
         foreach ($request->barang as $key => $barang_id) {
             $barang = new BarangPembelian;

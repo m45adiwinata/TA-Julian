@@ -190,10 +190,10 @@ class PenjualanController extends Controller
                     #barang kembali dengan aturan kapasitas sub lokasi
                     foreach ($stoks as $key => $stok) {
                         $sub_lokasi = $stok->subLokasi()->first();
-                        $sisa_kapasitas = $sub_lokasi->kapasitas;
-                        foreach ($sub_lokasi->stok()->where('satuan_id', 1)->get() as $key => $value) {
-                            $sisa_kapasitas -= $value->ketersediaan;
-                        }
+                        $sisa_kapasitas = $sub_lokasi->kapasitas - $stok->ketersediaan;
+                        // foreach ($sub_lokasi->stok()->where('satuan_id', 1)->get() as $key => $value) {
+                        //     $sisa_kapasitas -= $value->ketersediaan;
+                        // }
                         if ($sisa_kapasitas >= $jumlah_barang) {
                             $stok->ketersediaan += $jumlah_barang;
                             $stok->save();

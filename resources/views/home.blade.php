@@ -347,6 +347,7 @@
 <script>
     $(document).ready(function() {
         <?php 
+            $labels_pp = $labels;
             foreach ($pelanggans as $key => $pelanggan) {
                 $data = json_encode($pelanggan->total_belanja_perhari);
                 $labels = json_encode($pelanggan->label_perhari);
@@ -359,7 +360,7 @@
                 "type": "line",
 
                 "scale-x": { //X-Axis
-                    "labels": <?php echo(json_encode($labels)); ?>,
+                    "labels": <?php echo(json_encode($labels_pp)); ?>,
                     "label": {
                         "font-size": 14,
                         "offset-x": 0,

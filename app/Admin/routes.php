@@ -21,4 +21,6 @@ Route::group([
     $router->resource('users', UserController::class);
     $router->resource('sales', SalesController::class);
     $router->resource('stok-barang', StokBarangController::class);
+    $router->resource('penjualans', PenjualanController::class);
+    $router->resource('pembelians', PembelianController::class);
 });
