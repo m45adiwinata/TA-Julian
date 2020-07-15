@@ -67,6 +67,7 @@ class HistPembelianController extends Controller
 
     public function getData($tgl1, $tgl2)
     {
+        $tgl2 = date('Y-m-d', strtotime('+1 day', strtotime($tgl2)));
         $data['pembelians'] = Pembelian::where('status_id', 2)->whereBetween('created_at', [$tgl1, $tgl2])->orderBy('created_at')->get();
         $total = 0;
         foreach ($data['pembelians'] as $key => $pembelian) {
