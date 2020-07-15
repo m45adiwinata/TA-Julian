@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Penjualan;
 use App\Status;
 use Auth;
+use DateTime;
 
 class HistPenjualanController extends Controller
 {
@@ -44,6 +45,7 @@ class HistPenjualanController extends Controller
     }
     public function getData($tgl1, $tgl2)
     {
+        $tgl2 = date('Y-m-d', strtotime('+1 day', strtotime($tgl2)));
         $data['penjualans'] = Penjualan::whereBetween('created_at', [$tgl1, $tgl2])->orderBy('created_at', 'desc')->get();
         $total = 0;
         foreach ($data['penjualans'] as $key => $p) {
@@ -70,6 +72,29 @@ class HistPenjualanController extends Controller
             }
         }
         $data['penjualans2'] = Penjualan::whereBetween('created_at', [$tgl1, $tgl2])->orderBy('created_at')->get();
+        foreach ($data['penjualans2'] as $key => $p) {
+            $p->temp = 0;
+            $p->barangs = $p->barangPenjualan()->get();
+            $p->tanggal = date('d-m-Y', strtotime($p->created_at));
+            $p->tanggal2 = date('d-m-Y', strtotime($p->created_at));
+            $p->nama_pelanggan = $p->pelanggan()->first()->nama;
+            $p->nama_sales = $p->sales()->first()->nama;
+            foreach ($p->barangs as $key => $bp) {
+                $temp = $bp->barang()->first();
+                $bp->nama = $temp->nama;
+                $bp->harga = $temp->harga_jual;
+                $bp->qty = $bp->harga_jual / $temp->harga_jual;
+                if ($bp->status_id == 2) {
+                    if ($p->type_diskon == 0) {
+                        $diskon = $p->diskon;
+                    } else {
+                        $diskon = $bp->harga_jual * $p->diskon / 100;
+                    }
+                    $p->temp += $bp->harga_jual - $diskon;
+                    $total += $p->temp;
+                }
+            }
+        }
         $data['total'] = number_format($total, 2, ',', '.');
 
         return $data;

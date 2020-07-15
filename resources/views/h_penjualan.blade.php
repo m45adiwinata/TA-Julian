@@ -237,7 +237,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
                 if ($('#coin_salesx').length) {
                     var lbls = [];
                     var dts = [];
-                    $.each(data.penjualans, function(key, value) {
+                    $.each(data.penjualans2, function(key, value) {
                         lbls.push(value.tanggal);
                         dts.push(value.temp);
                     });
