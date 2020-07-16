@@ -20,6 +20,7 @@
 	<input type="number" name="jumlah" placeholder="jumlah..." value="1">
 	<input type="submit" name="submit">
 </form>
+
 @endsection
 @section('script')
 <script type="text/javascript">

@@ -88,7 +88,7 @@ class EoqController extends Controller
         //
     }
 
-    public function getData($tanggal1, $tanggal2)
+    public function getData($tanggal1, $tanggal2, $bya_kirim, $bya_jaga)
     {
         $data = Penjualan::whereBetween('created_at', [date($tanggal1), date($tanggal2)])->get();
         $totalunits = Barang::get();
@@ -116,7 +116,7 @@ class EoqController extends Controller
         }
         foreach ($totalunits as $key => $total) {
             if ($total->unit_terjual > 0) {
-                $total->eoq = sqrt(2 * $total->unit_terjual * ($total->harga/$totalsemuahargabarang * 8000000) / ($total->harga / $totalsemuahargabarang * 6000000));
+                $total->eoq = sqrt(2 * $total->unit_terjual * ($total->harga/$totalsemuahargabarang * $bya_kirim) / ($total->harga / $totalsemuahargabarang * $bya_jaga));
                 $total->pengulangan = ceil($total->unit_terjual / $total->eoq);
             }
             else {

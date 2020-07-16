@@ -57,6 +57,21 @@ body {font-family: Arial, Helvetica, sans-serif;}
                 <div class="col-12 mt-5">
                     <div class="card">
                         <div class="card-body">
+                            <h4 class="header-title">Masukkan Biaya Pengiriman dan Penjagaan</h4>
+                            <div class="single-table">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <input type="number" name="bya_kirim" id="bya_kirim" class="form-control" placeholder="Pengiriman...">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <input type="number" name="bya_jaga" id="bya_jaga" class="form-control" placeholder="Penjagaan...">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <h4 class="header-title">Masukkan Rentang Tanggal Penjualan</h4>
                             <div class="single-table">
                                 <div class="row">
@@ -75,6 +90,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
                                     </div>
                                 </div>
                             </div>
+                            
                             <div class="single-table">
                                 <div class="table-responsive">
                                     <table class="table table-hover progress-table text-center">
@@ -114,7 +130,9 @@ body {font-family: Arial, Helvetica, sans-serif;}
         $('#oke').click(function() {
             var tanggal1 = $('#tanggal1').val();
             var tanggal2 = $('#tanggal2').val();
-            $.get('/eoq/get-data-penjualan/'+tanggal1+'/'+tanggal2, function(data) {
+            var bya_kirim = $('#bya_kirim').val();
+            var bya_jaga = $('#bya_jaga').val();
+            $.get('/eoq/get-data-penjualan/'+tanggal1+'/'+tanggal2+'/'+bya_kirim+'/'+bya_jaga, function(data) {
                 $('#tbl-body').html('');
                 $.each(data, function(key, value) {
                     $('#tbl-body').append(
