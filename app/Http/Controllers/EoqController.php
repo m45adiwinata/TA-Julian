@@ -92,9 +92,12 @@ class EoqController extends Controller
     {
         $data = Penjualan::whereBetween('created_at', [date($tanggal1), date($tanggal2)])->get();
         $totalunits = Barang::get();
+        $totalsemuahargabarang = 0;
         foreach ($totalunits as $key => $total) {
             $total->unit_terjual = 0;
+            $totalsemuahargabarang += $total->harga;
         }
+        // dd($totalsemuahargabarang);
         foreach ($data as $key => $value) {
             foreach ($value->barangPenjualan()->get() as $key => $bp) {
                 $jml = $bp->harga_jual / $bp->barang()->first()->harga_jual;
@@ -113,7 +116,7 @@ class EoqController extends Controller
         }
         foreach ($totalunits as $key => $total) {
             if ($total->unit_terjual > 0) {
-                $total->eoq = sqrt(2 * $total->unit_terjual * ($total->harga/140434860 * 8000000) / ($total->harga / 140434860 * 6000000));
+                $total->eoq = sqrt(2 * $total->unit_terjual * ($total->harga/$totalsemuahargabarang * 8000000) / ($total->harga / $totalsemuahargabarang * 6000000));
                 $total->pengulangan = ceil($total->unit_terjual / $total->eoq);
             }
             else {
